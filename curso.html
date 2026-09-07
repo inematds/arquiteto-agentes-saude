@@ -537,7 +537,7 @@
     <p class="kicker">Caderno de Saúde · Aula 3</p>
     <h1>Sua especificação no kit:<br><em>confirmação e glosas</em></h1>
     <p class="promise">Ao fim desta aula você consegue montar a especificação do agente da sua clínica no Kit do Arquiteto de Agentes, a partir do preset de saúde, e ensaiá-la num chat de IA com um caso fictício.</p>
-    <p class="why">Você tem o processo mapeado (aula 1) e a matriz decidida (aula 2). Falta juntar numa página que o dono da clínica aprove em oito minutos e que quem cuida do sistema consiga construir. O kit faz a montagem, e o preset de saúde já vem com a Clínica Horizonte preenchida nos sete blocos, com as regras deste caderno embutidas: prontuário fora, sigilo como restrição, prazo de glosa, consentimento. Seu trabalho é trocar o que é da sua clínica e ensaiar.</p>
+    <p class="why">Você tem o processo mapeado (aula 1) e a matriz decidida (aula 2). Falta juntar numa página que o dono da clínica aprove em oito minutos e que quem cuida do sistema consiga construir. O kit faz a montagem, e o preset de saúde já vem com a clínica de Renata preenchida nos sete blocos, com as regras deste caderno embutidas: prontuário fora, sigilo como restrição, prazo de glosa, consentimento. Seu trabalho é trocar o que é da sua clínica e ensaiar.</p>
     <p class="cue"><span class="arw">↓</span> role para estudar</p>
   </div>
   <!-- herofig · METÁFORA-DO-MUNDO-REAL: prancheta de check-in de recepção com a folha de rotina preenchida, carimbo e caneta -->
@@ -557,8 +557,8 @@
   <div class="col">
     <section class="step" data-fig="1" data-kind="fundamento">
       <h2><span class="n">01</span> O caso que o preset traz, e o que muda de clínica para clínica</h2>
-      <p>O preset de saúde do kit é a Clínica Horizonte da aula 2, agora nos sete blocos: confirmação do dia seguinte e recurso de glosas por código, seis consultórios, quatro convênios. As regras deste caderno já estão escritas nele: motivo de consulta e prontuário fora do alcance, sigilo e LGPD como restrição fixa, menor só pelo responsável, recurso ao convênio só com aprovação, e a exceção "paciente faz pergunta → recepção".</p>
-      <p>O que muda de uma clínica para outra é previsível: os convênios e suas tabelas, o horário de envio, o texto padrão aprovado, quem aprova o quê, e o processo escolhido. Um consultório odontológico troca glosas por planos de tratamento; uma clínica de imagem troca confirmação por preparo de exame (que é administrativo quando o texto é padrão e aprovado pelo profissional, e clínico quando responde dúvida). O esqueleto fica; o conteúdo é seu.</p>
+      <p>O preset de saúde do kit é a clínica de Renata, que você acompanhou nas aulas 1 e 2, agora nos sete blocos: confirmação do dia seguinte e recurso de glosas por código, seis consultórios, quatro convênios. As regras deste caderno já estão escritas nele: motivo de consulta e prontuário fora do alcance, sigilo e LGPD como restrição fixa, menor só pelo responsável, recurso ao convênio só com aprovação, e a exceção "paciente faz pergunta → recepção".</p>
+      <p>O que muda de uma clínica para outra é previsível: os convênios e suas tabelas, o horário de envio, o texto padrão aprovado, quem aprova o quê, e o processo escolhido. Um consultório odontológico troca glosas por planos de tratamento. O esqueleto fica; o conteúdo é seu.</p>
       <!-- ex-prof --><p>Renata carregou o preset e trocou seis coisas: os quatro convênios, o horário (a clínica dela envia às 16h), o texto padrão, o nome da coordenadora de recepção como dona de "alterar agenda", o limite de glosa que chama (ela usa 1.500 reais) e a bateria de casos, que ela montou com quinze consultas e glosas reais de março, com os nomes trocados. Patrícia trocou mais: o processo inteiro virou retomada de planos de tratamento, mas a matriz e os dados fora ficaram quase iguais.</p>
       <div class="qapply">
         <p class="qak">Na sua clínica, o primeiro processo costuma ser</p>
@@ -575,7 +575,7 @@
     <section class="step" data-fig="2" data-kind="ferramenta" data-versao="Kit do Arquiteto de Agentes v1, set/2026">
       <h2><span class="n">02</span> Carregar o preset e marcar a área liga as regras de saúde</h2>
       <p>No kit, o seletor "carregar exemplo por área" tem a opção saúde. Ao carregar, o campo "área" fica em saúde, e isso liga três verificações que o kit faz sozinho, além das gerais do curso-base: se dado de saúde (prontuário, diagnóstico, laudo, exame) não estiver na lista de fora do alcance, aparece uma lacuna; se alguma ação ou objetivo tiver palavra clínica (diagnóstico, prescrição, conduta), aparece outra; se LGPD, consentimento ou sigilo não aparecerem em lugar nenhum, uma terceira.</p>
-      <p>Isto parece uma tela cheia de campos, mas funciona como a ficha de admissão do paciente: cada campo é uma pergunta que você responde uma vez, e depois disso o kit monta a página sozinho. Você só vai mexer no que é da sua clínica. Se apagar uma restrição de sigilo sem querer, a lacuna aparece embaixo da especificação antes de você entregar.</p>
+      <p>Isto parece uma tela cheia de campos, mas funciona como a ficha de admissão do paciente: cada campo é uma pergunta que você responde uma vez, e o kit monta a página sozinho. Se apagar uma restrição de sigilo sem querer, a lacuna aparece embaixo da especificação antes de você entregar.</p>
       <!-- ex-prof --><p>Patrícia, ao adaptar o preset para planos de tratamento, escreveu no objetivo "retomar pacientes com plano apresentado e indicar o tratamento pendente". O kit marcou: "alguma ação ou objetivo parece clínico". Ela trocou por "retomar pacientes com plano apresentado e agendar a conversa com a dentista". O tratamento pendente é a dentista quem fala. Foi a lacuna que ela mais agradeceu.</p>
       <div class="mobfig" data-mobfig="2"></div>
       <button class="readbtn" data-read="s2">marcar como lido</button>
@@ -583,8 +583,8 @@
 
     <section class="step" data-fig="3" data-kind="fundamento">
       <h2><span class="n">03</span> O que trocar no preset, bloco a bloco</h2>
-      <p>A adaptação segue uma ordem que evita esquecer o essencial. Comece pelo bloco 1 com o nome da sua clínica e o resultado na sua frase. No bloco 2, troque as decisões de regra pelos seus limites (horário da segunda mensagem, valor de glosa que separa). No bloco 3, o texto padrão e os convênios no contexto. No bloco 4, os nomes dos sistemas reais e se têm porta de serviço. No bloco 5, o inventário com os seus donos. No bloco 6, os seus limites de parar e chamar e a sua bateria. No bloco 7, os nomes das pessoas.</p>
-      <p>O que não trocar sem pensar duas vezes: a lista de dados fora do alcance, a restrição de sigilo, "recurso ao convênio: com aprovação" e "aprovar: não pode". Essas linhas são o motivo de o dono da clínica dizer sim. Se a sua clínica precisar afrouxar alguma, afrouxe depois de um mês de registro limpo, um degrau por vez, como o curso-base ensina.</p>
+      <p>A adaptação segue uma ordem que evita esquecer o essencial. Comece pelo bloco 1 com o nome da sua clínica e o resultado na sua frase. No bloco 2, troque as decisões de regra pelos seus limites (horário da segunda mensagem, valor de glosa que separa). Nos blocos 3 a 5, o texto padrão, os convênios, os sistemas reais e o inventário com os seus donos. Nos blocos 6 e 7, os seus limites de parar e chamar, a sua bateria e os nomes das pessoas.</p>
+      <p>O que não trocar sem pensar duas vezes: a lista de dados fora do alcance, a restrição de sigilo, "recurso ao convênio: com aprovação" e "aprovar: não pode". Essas linhas são o motivo de o dono da clínica dizer sim. Se precisar afrouxar alguma, afrouxe depois de um mês de registro limpo, um degrau por vez, como o curso-base ensina.</p>
       <!-- ex-prof --><p>Renata levou vinte minutos na adaptação e a parte mais demorada foi a bateria: escolher quinze consultas e glosas de março que cobrissem os casos difíceis (menor sem responsável, paciente com dois cadastros, glosa repetida). Ela não copiou nome nenhum para o kit: escreveu "consulta 7 de terça, 14h, Dra. Amaral" e guardou a referência real na planilha da clínica.</p>
       <div class="qsteps">
         <p class="qsk">Ordem de adaptação do preset de saúde</p>
@@ -603,8 +603,8 @@
 
     <section class="step" data-fig="4" data-kind="fundamento">
       <h2><span class="n">04</span> O que o ensaio simulado costuma revelar numa clínica</h2>
-      <p>Quando você cola a especificação no chat com o prompt de ensaio do kit, o chat faz o papel do coordenador e roda um caso fictício. Em clínicas, três lacunas aparecem com frequência. A primeira: o caso traz um paciente que responde com pergunta, e a especificação diz "separar para a recepção", mas não diz como a recepção é avisada. A segunda: uma glosa por motivo que não está na lista, e o coordenador não sabe se para ou prepara recurso genérico. A terceira: paciente com dois cadastros, e ninguém disse qual usar.</p>
-      <p>Cada uma vira uma linha nova. "Avisar a recepção pela lista das 8h, não por mensagem avulsa." "Glosa por motivo fora da lista: parar e subir para a gestora." "Dois cadastros: parar, não enviar para nenhum dos dois, subir para a recepção." Rode três casos: um comum, um difícil, a exceção. Quando os três passam, a página está pronta para o dono da clínica e para quem cuida do sistema.</p>
+      <p>Quando você cola a especificação no chat com o prompt de ensaio do kit, o chat faz o papel do coordenador e roda um caso fictício. Em clínicas, três lacunas aparecem com frequência. A primeira: o paciente responde com pergunta, a especificação manda separar para a recepção, mas não diz como a recepção é avisada. A segunda: glosa por motivo fora da lista, e o coordenador não sabe se para. A terceira: paciente com dois cadastros, e ninguém disse qual usar.</p>
+      <p>Cada uma vira uma linha nova. "Avisar a recepção pela lista das 8h, não por mensagem avulsa." "Glosa por motivo fora da lista: parar e subir para a gestora." Rode três casos: um comum, um difícil, a exceção. Quando os três passam, a página está pronta para o dono da clínica e para quem cuida do sistema.</p>
       <!-- ex-prof --><p>No ensaio de Renata, o chat, no papel de coordenador, perguntou: "a paciente de 17 anos não tem responsável cadastrado; envio para o telefone dela?". A especificação dizia "menor só pelo responsável", mas não dizia o que fazer sem responsável. Ela acrescentou: "menor sem responsável cadastrado: não enviar, separar para a recepção ligar". Dez minutos de ensaio, uma linha que evitaria uma mensagem a um adolescente sem autorização.</p>
       <div class="mobfig" data-mobfig="4"></div>
       <button class="readbtn" data-read="s4">marcar como lido</button>
@@ -638,7 +638,7 @@
     <div class="figstage">
       <div class="fig on" data-fig="1" data-cap="<b>Fig.</b> o preset como esqueleto (cinza) e o que muda por clínica (verde): convênios, horário, texto padrão, donos, limites, bateria. As linhas âmbar são as que não se trocam sem pensar: dados fora do alcance, sigilo, recurso com aprovação, aprovar não pode."><svg viewBox="0 0 220 200" fill="none" aria-hidden="true">
         <rect x="14" y="14" width="192" height="172" rx="8" stroke="#37324a" stroke-width="1.5"/>
-        <text x="20" y="30" font-family="monospace" font-size="7.5" fill="#948DA6">preset saúde: Clínica Horizonte</text>
+        <text x="20" y="30" font-family="monospace" font-size="7.5" fill="#948DA6">preset saúde: clínica de Renata</text>
         <g font-family="monospace" font-size="6.5">
           <rect x="20" y="40" width="86" height="14" rx="2" fill="#7CE0C6" opacity=".8"/><text x="24" y="50" fill="#0E0D14">convênios</text>
           <rect x="110" y="40" width="90" height="14" rx="2" fill="#7CE0C6" opacity=".8"/><text x="114" y="50" fill="#0E0D14">horário de envio</text>
@@ -704,7 +704,7 @@
 <div class="recap-autor">
   <p class="rak">Resumo</p>
   <ul>
-    <li>O preset de saúde traz a Clínica Horizonte nos sete blocos, com as regras do caderno embutidas. Você troca convênios, horários, texto padrão, donos, limites e bateria; não troca dados fora, sigilo e "aprovar: não pode" sem um mês de registro limpo.</li>
+    <li>O preset de saúde traz a clínica de Renata nos sete blocos, com as regras do caderno embutidas. Você troca convênios, horários, texto padrão, donos, limites e bateria; não troca dados fora, sigilo e "aprovar: não pode" sem um mês de registro limpo.</li>
     <li>Marcar "área: saúde" liga três verificações a mais no kit, que acendem lacunas antes de você entregar a página.</li>
     <li>A adaptação segue do bloco 1 ao 7, e a parte mais demorada é a bateria de casos, sempre sem nome de paciente.</li>
     <li>O ensaio numa clínica costuma revelar como avisar a recepção, o que fazer com glosa fora da lista e com paciente de dois cadastros. Cada resposta vira uma linha nova.</li>
