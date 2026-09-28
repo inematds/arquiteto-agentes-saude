@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+
+<html data-theme="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="arquiteto-agentes-saude-v5" name="curso"/>
+<title>Agents in the Clinic · Healthcare Workbook · INEMA.CLUB PRO</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&amp;family=Inter:wght@400;500;600;700&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="../assets/aula.css" rel="stylesheet"/>
+<script>(function(){try{var m=document.querySelector('meta[name=curso]');var CK=(m&&m.content)||'v5:curso';var s=JSON.parse(localStorage.getItem(CK));if(s&&s.prefs&&s.prefs.theme)document.documentElement.setAttribute('data-theme',s.prefs.theme);}catch(e){}})();</script>
+<!--
+  PROTOCOLO DE DESCOBERTA (formato-curso-v5, Passo 0 — INFERIDO a partir do curso-base pffia e do pedido "cadernos por profissão", 2026-09-07; sujeito a correção do usuário):
+  - Público específico: quem administra clínicas e consultórios (dono, gestora administrativa, coordenação de recepção) e já fez ou vai fazer o curso-base Arquiteto de Trabalho com IA.
+  - Profissões-alvo (≥2): gestora administrativa de clínica médica · gestora de consultório odontológico (secundária: médico dono da clínica, no papel de quem aprova).
+  - Familiaridade com tecnologia: usa o sistema da clínica (agenda, faturamento TISS), aplicativo de mensagens e chat de IA para textos; nunca programou.
+  - Resultado prático esperado: sair com um processo ADMINISTRATIVO da clínica (nunca clínico) mapeado e especificado no Kit do Arquiteto de Agentes, com dados de paciente fora do alcance e governança escrita.
+  - Tempo por sessão: 15–25 min por aula. Caderno complementar: 3 aulas, pressupõe o curso-base.
+  Escopo explícito: o agente executa trabalho administrativo (agenda, confirmação, glosas, documentação, cobrança). Nenhum exemplo envolve decisão clínica, diagnóstico ou prescrição.
+
+  AUDITORIA ANTI-CLONE (contra pffia e os cadernos contábil/advocacia):
+  - Personagens e situações novos: Renata (gestora de clínica médica, confirmação e glosas), Patrícia (consultório odontológico, planos de tratamento e lista de espera). pffia não usa saúde.
+  - Sequência de quadros: aula 1 qba@2 · qanchor@4; aula 2 qerr@2 · qsteps@4; aula 3 qapply@1 · qsteps@3. Modos: tarefa · analise · prompt. Contábil usa qba@1/qanchor@3 e tarefa·tarefa·prompt; advocacia usa qba@1/qanchor@4 com aula 2 FUNDAMENTO.
+-->
+<style>
+  .view{display:none}.view.active{display:block}
+  .lnav{max-width:1160px;margin:0 auto 5vh;padding:0 clamp(24px,5vw,60px);display:flex;justify-content:space-between;gap:12px}
+  .lnav a{font-family:var(--mono);font-size:12px;color:var(--muted);text-decoration:none;border:1px solid var(--line2);border-radius:12px;padding:12px 16px}
+  .lnav a:hover{border-color:var(--accent);color:var(--ink)}
+  #v-trilha .wrap{max-width:1080px;margin:0 auto;padding:0 clamp(24px,5vw,60px)}
+  #v-trilha .t-hero{position:relative;overflow:hidden;padding:20vh 0 8vh;border-bottom:1px solid var(--line)}
+  #v-trilha h1{font-family:var(--serif);font-weight:500;font-size:clamp(40px,6.4vw,72px);line-height:1;letter-spacing:-.025em;margin:0 0 22px}
+  #v-trilha h1 em{font-style:italic;color:var(--accent)}
+  #v-trilha .lead{font-family:var(--serif);font-size:clamp(19px,2.1vw,24px);line-height:1.5;color:var(--ink-soft);max-width:46ch;margin:0 0 30px}
+  #v-trilha section{padding:8vh 0}
+  #v-trilha .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  #v-trilha h2{display:block;font-family:var(--serif);font-weight:500;font-size:clamp(26px,3.6vw,38px);margin:0 0 28px}
+  #v-trilha .aulas{display:grid;gap:14px}
+  #v-trilha .au{display:grid;grid-template-columns:56px 1fr auto;gap:20px;align-items:center;text-decoration:none;color:inherit;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px 24px}
+  #v-trilha .au .num{font-family:var(--serif);font-size:30px;color:var(--accent);text-align:center}
+  #v-trilha .au h3{font-family:var(--serif);font-weight:500;font-size:21px;margin:0 0 5px}
+  #v-trilha .au p{margin:0;color:var(--muted);font-size:14.5px}
+  #v-trilha .au .meta{font-family:var(--mono);font-size:11px;color:var(--accent);white-space:nowrap;text-align:right}
+  #v-trilha .au .prog{position:static;margin-top:10px;height:5px;border-radius:99px;background:var(--line);overflow:hidden;max-width:220px;width:auto}
+  #v-trilha .au .prog i{display:block;height:100%;width:100%;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .5s}
+  #v-trilha footer{max-width:1080px;margin:0 auto;padding:6vh clamp(24px,5vw,60px) 12vh;color:var(--faint);text-align:center;font-family:var(--serif);font-style:italic;border-top:1px solid var(--line)}
+  #v-trilha .fontes{color:var(--muted);font-size:13.5px;line-height:1.6;max-width:70ch}
+  #v-trilha .fontes a{color:var(--ink-soft)}
+  @media(max-width:720px){#v-trilha .au{grid-template-columns:44px 1fr}#v-trilha .au .meta{grid-column:2;text-align:left}}
+</style>
+<link href="https://inematds.github.io/arquiteto-agentes-saude/curso.html" hreflang="pt-BR" rel="alternate"/><link href="https://inematds.github.io/arquiteto-agentes-saude/en/curso.html" hreflang="en" rel="alternate"/><link href="https://inematds.github.io/arquiteto-agentes-saude/es/curso.html" hreflang="es" rel="alternate"/></head>
+<body><div class="inema-lang" style="position:fixed;right:14px;bottom:14px;z-index:9999;display:flex;gap:2px;padding:4px;border-radius:10px;background:rgba(12,12,16,.82);border:1px solid rgba(226,162,59,.45);font:600 12px/1 Sora,Inter,system-ui,sans-serif;backdrop-filter:blur(8px)" translate="no"><a href="../curso.html" hreflang="pt-BR" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#e9e9ee">PT</a><a href="./curso.html" hreflang="en" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#1a1206;background:#E2A23B">EN</a><a href="../es/curso.html" hreflang="es" style="padding:6px 8px;border-radius:7px;text-decoration:none;color:#e9e9ee">ES</a></div>
+<div class="bar"><div class="bar-inner">
+<span class="brand"><a class="mark" href="https://inema.club" rel="noopener" target="_blank">INEMA.CLUB</a><a class="pro" href="https://inema.pro" rel="noopener" target="_blank">PRO</a><a class="course" href="landing.html">Agents in the Clinic</a></span>
+<a class="back" href="#trilha" style="display:none">← track</a>
+<button class="pill" id="pill" style="display:none">0 read</button>
+<button id="revbtn">review <span id="revn">0</span></button>
+<button id="exbtn">exercises</button>
+<button id="jorbtn">journey</button>
+<button aria-label="How it works" id="helpbtn">?</button>
+<button aria-label="Reading preferences" id="prefsbtn">Aa</button>
+<button id="themebtn">theme: dark</button>
+</div></div>
+<section class="view" id="v-trilha">
+<header class="t-hero"><div class="wrap">
+<p class="kicker">Professional Workbook · Healthcare · 3 lessons</p>
+<h1>Agents in the <em>clinic</em></h1>
+<p class="lead">Leave with an administrative process at your clinic specified in the Agent Architect’s Kit: patient data out of scope, confidentiality as a fixed restriction, and the agent handling scheduling, confirmations, and claim denials while the team takes care of people.</p>
+</div></header>
+<section><div class="wrap">
+<div class="statcards"></div>
+<p class="eyebrow">Lessons</p>
+<h2>From reception to insurance</h2>
+<div class="aulas">
+<a class="au on" data-aula="1" href="#aula-1">
+<div class="num">1</div>
+<div><h3>Ten clinic processes an agent can handle, and the line it must never cross</h3><p>Leave with the list of ten administrative processes and one mapped across six links, with clinical work separated from administrative work.</p><div class="prog"><i></i></div></div>
+<div class="meta">21 min · open →</div>
+</a>
+<a class="au on" data-aula="2" href="#aula-2">
+<div class="num">2</div>
+<div><h3>What the agent can see and do in a clinic</h3><p>Leave with a clinic agent’s permissions matrix decided, with medical records and health data out of scope and confidentiality written as a restriction.</p><div class="prog"><i></i></div></div>
+<div class="meta">21 min · open →</div>
+</a>
+<a class="au on" data-aula="3" href="#aula-3">
+<div class="num">3</div>
+<div><h3>Your specification in the kit: confirmation and denials</h3><p>Leave with your clinic’s agent specification built in the kit from the healthcare preset and rehearsed in an AI chat.</p><div class="prog"><i></i></div></div>
+<div class="meta">24 min · open →</div>
+</a>
+</div>
+</div></section>
+<section><div class="wrap">
+<p class="eyebrow">Before you begin</p>
+<h2>This workbook assumes you’ve completed the base course</h2>
+<p class="fontes">The six links, the long-horizon request, the chain, the context inventory, the quality checklist, and the permissions matrix are explained in the course <a href="https://inematds.github.io/pffia/" rel="noopener" target="_blank">AI Work Architect</a>. Here, they’re applied to the clinic. The exercise in lesson 3 uses the <a href="https://inematds.github.io/kit-arquiteto-agentes/" rel="noopener" target="_blank">Agent Architect Kit</a>, with the healthcare preset.</p>
+</div></section>
+<footer><div class="wrap">Agents in the Clinic · Healthcare Workbook · INEMA.CLUB PRO</div></footer>
+</section>
+<!-- ===== AULA 1 · FUNDAMENTO ===== -->
+<section class="view" data-aula="1" data-tempo="21min" id="v-aula-1">
+<header class="hero"><div class="hero-inner">
+<div>
+<p class="kicker">Health Workbook · Lesson 1</p>
+<h1>Ten clinic processes,<br/><em>and the line the agent never crosses</em></h1>
+<p class="promise">By the end of this lesson, you can list the ten administrative processes in your clinic that an agent can handle, distinguish the administrative from the clinical parts of each one, and map one of them across six links.</p>
+<p class="why">At a clinic, the AI conversation always gets stuck in the same place: “what if it makes a mistake with a patient?” The concern is legitimate and has a simple solution: the agent stays away from clinical decisions. It handles the work that currently takes up the receptionists’ and manager’s time: confirmation calls, claim-denial spreadsheets, private-pay billing, and administrative documents. That’s where a six-office clinic loses three hours a day, and that’s where the redesign begins.</p>
+<p class="cue"><span class="arw">↓</span> role to study</p>
+</div>
+<!-- herofig · METÁFORA-DO-MUNDO-REAL: o balcão de recepção de uma clínica, com a porta do consultório fechada ao fundo — a linha entre o administrativo e o clínico -->
+<div class="herofig"><svg aria-hidden="true" fill="none" viewbox="0 0 300 240">
+<rect fill="#1a1824" height="180" rx="6" stroke="#948DA6" stroke-width="2" width="260" x="20" y="30"></rect>
+<rect fill="#221f2e" height="120" rx="3" stroke="#948DA6" stroke-width="2" width="60" x="190" y="50"></rect>
+<circle cx="240" cy="112" fill="#F2B45C" r="3"></circle>
+<rect fill="#F2B45C" height="14" opacity=".9" rx="2" width="40" x="200" y="60"></rect>
+<path d="M206 67 h28" opacity=".5" stroke="#0E0D14" stroke-width="2"></path>
+<rect fill="#221f2e" height="60" rx="6" stroke="#7CE0C6" stroke-width="2" width="140" x="30" y="140"></rect>
+<rect fill="#7CE0C6" height="8" opacity=".6" rx="3" width="140" x="30" y="140"></rect>
+<rect fill="#ECE6D9" height="26" opacity=".85" rx="3" width="40" x="44" y="118"></rect>
+<path d="M50 126 h28 M50 132 h20 M50 138 h24" opacity=".5" stroke="#0E0D14" stroke-width="2"></path>
+<rect fill="#1a1824" height="22" rx="4" stroke="#948DA6" stroke-width="2" width="30" x="96" y="116"></rect>
+<path d="M104 127 h14" stroke="#7CE0C6" stroke-width="2"></path>
+<circle cx="140" cy="106" fill="#948DA6" r="12"></circle><path d="M128 120 q12 -8 24 0 v20 h-24z" fill="#948DA6"></path>
+<path d="M178 40 v170" stroke="#F2B45C" stroke-dasharray="6 5" stroke-width="2"></path>
+<circle cx="70" cy="84" fill="#7CE0C6" opacity=".9" r="10"></circle><path d="M60 96 q10 -6 20 0 v14 h-20z" fill="#7CE0C6" opacity=".9"></path>
+<path d="M86 90 h18" stroke="#7CE0C6" stroke-width="2"></path>
+</svg></div>
+</div></header>
+<div class="layout">
+<div class="col">
+<section class="step" data-fig="1" data-kind="fundamento">
+<h2><span class="n">01</span> Administrative and clinical are two separate worlds, and the agent belongs in only one</h2>
+<p>The rule that organizes this entire workbook fits in one sentence: the agent does the work <b>administrative</b> and never handles <b>clinical</b>. Administrative tasks are anything that would happen the same way if the clinic were a store: scheduling, confirming, billing, invoicing, filing, answering questions about where to park. Clinical tasks are anything that requires healthcare training: diagnosis, treatment decisions, prescriptions, symptom guidance, test interpretation.</p>
+<p>The test for separating them is simple: could a well-trained receptionist do this without asking a health professional? If so, it’s administrative and can go to an agent. If they would need to ask, it’s clinical and stays out of scope, without exception—not even “just a summary.” This isn’t a limitation of the technology. It’s the same line the clinic already draws between the front desk and the exam room.</p>
+<!-- ex-prof --><p>Renata, administrative manager of a medical clinic with six exam rooms, listed what the front desk handles in a day: 90 confirmation calls, 40 messages asking “what time is my appointment?”, 12 add-on appointments, the insurance claim denial spreadsheet, and three attendance certificates. All administrative. The two questions the front desk passes to nursing each day—“can I take my medication before the test?”—are clinical and stay with nursing.</p>
+<div class="quiz" data-answer="b">
+<p class="qk">Test yourself</p><p class="q">A patient sends a message: "I have a headache. Can I move my appointment earlier?" What part of this can a clinic agent handle?</p>
+<button class="opt" data-fb="Não. Responder sobre a dor, mesmo que 'tome água e descanse', é orientação sobre sintoma: clínico. Fica fora do agente sem exceção." data-k="a">reply that a headache isn’t an emergency and keep the appointment time</button>
+<button class="opt" data-fb="Isso. Verificar vaga e oferecer horário é administrativo, uma recepcionista faz sem perguntar. O sintoma é clínico: o agente não comenta, e encaminha para a equipe se a regra da clínica mandar." data-k="b">check whether there’s an opening first and offer the time, without commenting on the symptom</button>
+<button class="opt" data-fb="Perto. A mensagem tem uma parte administrativa (adiantar) que o agente pode tratar. Passar tudo para a enfermagem desperdiça a recepção digital." data-k="c">forward the entire message to the nursing staff</button>
+<p class="qfb"></p>
+</div>
+<div class="mobfig" data-mobfig="1"></div>
+<button class="readbtn" data-read="s1">mark as read</button>
+</section>
+<section class="step" data-fig="2" data-kind="fundamento">
+<h2><span class="n">02</span> The ten administrative processes in almost every clinic</h2>
+<p>The core course asks for ten critical processes instead of dozens of chatbots. In a clinic or dental office, the ten are usually these: <b>scheduling and confirmation</b> of appointments; <b>waitlist</b> and appointment openings; <b>claim denials</b> from insurance (claims the insurer returns unpaid); <b>billing</b> to the health plan; <b>billing</b> for self-pay patients and treatment plans; <b>administrative documents</b> (attendance certificate, statement, receipt); <b>onboarding</b> for new patients (registration, consent form, arrival instructions); <b>inventory</b> of supplies; <b>handoff</b> to the professionals; and <b>satisfaction survey</b> post-appointment.</p>
+<p>Notice that none of the ten requires healthcare training, and that all of them currently take time away from people who also serve patients at the front desk. Choose the first one using the core course’s criteria: what repeats every day, involves more than one person, and costs money or loses patients when it fails. For most clinics, that points to confirmations or claim denials.</p>
+<!-- ex-prof --><p>Patrícia, manager of a dental practice with three dentists, thought her problem was something else: treatment plans that were presented but never accepted. It’s process five on the list: following up on treatment plans. Forty plans a month, twelve accepted, and no one had time to follow up on the other 28. An agent that follows up with a standard message and schedules a conversation with the dentist is administrative from start to finish.</p>
+<div class="qbefore-after">
+<div class="qba-col qba-before"><p class="qba-lbl">Before</p><p class="qba-txt">Two receptionists spend the afternoon calling to confirm the next day’s 90 patients. One-third don’t answer. The front desk is left unattended several times, and the no-show rate is 18%.</p></div>
+<div class="qba-col qba-depois"><p class="qba-lbl">After</p><p class="qba-txt">At 5 p.m., the agent sends the standard message, reads the replies, records the status in the schedule, and delivers the list at 8 a.m.: confirmed, no response, canceled. Reception calls only the 15 who didn’t respond.</p></div>
+<div class="qba-saldo"><b>Balance:</b> from 90 calls to 15, with the front desk always busy, and the no-show rate dropped to 9% in two months because patients who cancel give early notice and the opening goes to the waitlist.</div>
+</div>
+<div class="mobfig" data-mobfig="2"></div>
+<button class="readbtn" data-read="s2">mark as read</button>
+</section>
+<section class="step" data-fig="3" data-kind="fundamento">
+<h2><span class="n">03</span> Appointment confirmation in six links</h2>
+<p>Applying the base course's map to the most common process. <b>Input</b>: at 5:00 p.m., the next day's schedule is pulled from the clinic system. <b>Rule decisions</b>: patient hasn’t replied by 8 p.m.? Send a second message. Minor? Message only the registered responsible party. <b>Judgment decision</b>: release the slot of someone who hasn’t confirmed to the waitlist? That’s up to the manager because it depends on knowing the patient. <b>Action</b>: send the standard message and record the status.</p>
+<p><b>Verification</b>: the name, date, time, and provider match the schedule, and the message contains nothing beyond the standard text. <b>Exception</b>: the patient replies with a question ("can I reschedule?", "do I need to bring test results?"). The agent doesn’t reply; it forwards the message to the front desk. <b>Result</b>: at 8:00 a.m., the manager knows the status of every appointment that day. Notice what was left out: the reason for the appointment never appears in the message, and the agent never answers a question that isn't about scheduling.</p>
+<!-- ex-prof --><p>At Renata’s clinic, the most common exception was the question “Do I need to fast?” It’s a clinic: it depends on the test. The written rule became: any message with a question that isn’t about scheduling goes to reception, which decides whether to answer or pass it to the nursing staff. The agent never reads the content beyond identifying that it’s a question.</p>
+<div class="mobfig" data-mobfig="3"></div>
+<button class="readbtn" data-read="s3">mark as read</button>
+</section>
+<section class="step" data-fig="4" data-kind="fundamento">
+<h2><span class="n">04</span> Insurance claim denials: the process nobody wants and every agent loves</h2>
+<p><span class="gterm" data-def="Guia de atendimento que o convênio devolve sem pagar, total ou parcialmente, alegando erro de código, falta de autorização ou divergência de valor." tabindex="0">Claim denial</span> It’s the claim form the insurance plan returns without paying. The most common reason is a procedure code that doesn’t match the insurance plan’s table, and the appeal is a standard text citing the claim form, the correct code, and the amount. It’s repetitive, tedious work with clear rules and a short deadline—in other words, the ideal process for an agent. <b>Input</b>: the insurance provider’s weekly statement. <b>Rule decision</b>: denial due to a code? Prepare an appeal. Due to missing prior authorization? Set it aside for the manager.</p>
+<p><b>Action</b>: match the claim form against the insurance provider’s table and write the appeal using the template. <b>Verification</b>: the claim form, code, and amount match. <b>Exception</b>: a denial over 2 thousand reais or one repeated for the same patient, which may indicate a registration problem, goes to the manager. <b>Result</b>: the completed appeals for the manager to review and sign. The agent never sends anything to the insurance provider: sending is an external action, and the manager signs.</p>
+<!-- ex-prof --><p>At Patrícia’s dental practice, claim denials happen for another reason: an X-ray is billed without the report attached. The rule is the same: denial due to a missing document? Attach the document from the administrative record and appeal. But the report is health data. The solution was for the agent to list which claims need a report and for the assistant to attach it. The agent prepares; a person handles the sensitive data.</p>
+<div class="qanchor"><p>The clinic’s agent never knows why the patient came in. It knows when, with whom, and whether they confirmed.</p></div>
+<div class="mobfig" data-mobfig="4"></div>
+<button class="readbtn" data-read="s4">mark as read</button>
+</section>
+<section class="practice" data-mode="tarefa" data-practice="p1">
+<p class="pk">Practice now <span class="pcount">0/4 done</span></p>
+<h3 class="ph">Choose your clinic’s process and draw the line</h3>
+<p class="pgoal">In about 12 minutes, list your clinic’s ten administrative processes, choose one, and map it across six links, clearly marking where the clinical line runs.</p>
+<p class="psafe">Use your own paper or spreadsheet, without any patient names: you write about processes, not cases. Nothing changes at the clinic. If a process seems both administrative and clinical, write down both sides and continue: separating them is the exercise.</p>
+<ol class="psteps">
+<li><label><input data-ptask="1" type="checkbox"/> Copy the list of ten processes from step 02 and adapt it to your clinic: cross out what doesn’t exist, add what’s missing (e.g., exam scheduling, follow-up tracking). Next to each one, note who handles it today and how much time it takes each day.</label></li>
+<li><label><input data-ptask="2" type="checkbox"/> For each process, apply the test: could a well-trained receptionist do it without asking a health professional? Mark A (administrative) or C (clinical). If any are C, remove them from the agent’s list.</label></li>
+<li><label><input data-ptask="3" type="checkbox"/> Choose an A process using this criterion: it happens every day, involves more than one person, or an error costs money or affects a patient. Write its outcome in one sentence, describing what the manager will know or have.</label></li>
+<li><label><input data-ptask="4" type="checkbox"/> Map the six links (input, decisions with R or J, actions with verification, exceptions with who decides, outcome). You’re done when at least one exception says “patient asks a question that isn’t about scheduling → person decides,” and no action touches the reason for the visit, tests, or medical records.</label></li>
+</ol>
+<p class="pdone">You’ve just done what holds most clinics back: clearly separated what an agent can handle from what only the healthcare team may touch. This map goes into the kit in lesson 3.</p>
+</section>
+</div>
+<aside class="rail"><div class="railsticky">
+<div class="figstage">
+<div class="fig on" data-cap="&lt;b&gt;Fig.&lt;/b&gt; o teste da recepcionista. Toda tarefa entra por cima; se uma recepcionista treinada faz sem perguntar a um profissional de saúde, cai na caixa verde (administrativo, pode ir para o agente); se precisaria perguntar, sai pela lateral vermelha (clínico, fora do agente, sem exceção)." data-fig="1"><svg aria-hidden="true" fill="none" viewbox="0 0 220 200">
+<rect height="22" rx="4" stroke="#948DA6" stroke-width="1.5" width="80" x="70" y="12"></rect><text fill="#ECE6D9" font-family="monospace" font-size="8.5" x="88" y="27">task</text>
+<path d="M110 34 v16" stroke="#948DA6" stroke-width="1.5"></path>
+<polygon fill="#221f2e" points="110,50 170,86 110,122 50,86" stroke="#7CE0C6" stroke-width="1.5"></polygon>
+<text fill="#ECE6D9" font-family="monospace" font-size="7" x="70" y="82">receptionist does</text><text fill="#ECE6D9" font-family="monospace" font-size="7" x="72" y="94">without asking?</text>
+<path d="M110 122 v20" stroke="#7CE0C6" stroke-width="1.5"></path><text fill="#7CE0C6" font-family="monospace" font-size="7.5" x="116" y="136">yes</text>
+<rect fill="#221f2e" height="30" rx="6" stroke="#7CE0C6" stroke-width="2" width="120" x="50" y="142"></rect><text fill="#7CE0C6" font-family="monospace" font-size="8" x="58" y="161">administrative → agent</text>
+<path d="M170 86 h24" stroke="#E0736F" stroke-width="1.5"></path><text fill="#E0736F" font-family="monospace" font-size="7.5" x="172" y="80">no</text>
+<rect height="32" rx="4" stroke="#E0736F" stroke-dasharray="3 3" stroke-width="1.5" width="22" x="194" y="70"></rect><text fill="#E0736F" font-family="monospace" font-size="7" x="197" y="90">clin.</text>
+<text fill="#6C6580" font-family="monospace" font-size="7.5" x="30" y="190">the same line between reception and the medical office</text>
+</svg></div>
+<div class="fig" data-cap="&lt;b&gt;Fig.&lt;/b&gt; os dez processos administrativos como dez caixas em duas colunas. Nenhuma toca a faixa vermelha do consultório. Confirmação e glosas (verde) são onde a maioria das clínicas começa: repetem todo dia e custam dinheiro quando falham." data-fig="2"><svg aria-hidden="true" fill="none" viewbox="0 0 220 200">
+<g fill="#ECE6D9" font-family="monospace" font-size="6.5">
+<rect fill="#7CE0C6" height="16" opacity=".85" rx="3" width="88" x="12" y="14"></rect><text fill="#0E0D14" x="16" y="25">confirmation</text>
+<rect height="16" rx="3" stroke="#948DA6" stroke-width="1" width="88" x="12" y="34"></rect><text x="16" y="45">waitlist</text>
+<rect fill="#7CE0C6" height="16" opacity=".85" rx="3" width="88" x="12" y="54"></rect><text fill="#0E0D14" x="16" y="65">claim denials</text>
+<rect height="16" rx="3" stroke="#948DA6" stroke-width="1" width="88" x="12" y="74"></rect><text x="16" y="85">billing</text>
+<rect height="16" rx="3" stroke="#948DA6" stroke-width="1" width="88" x="12" y="94"></rect><text x="16" y="105">billing/plans</text>
+<rect height="16" rx="3" stroke="#948DA6" stroke-width="1" width="88" x="108" y="14"></rect><text x="112" y="25">admin. documents</text>
+<rect height="16" rx="3" stroke="#948DA6" stroke-width="1" width="88" x="108" y="34"></rect><text x="112" y="45">onboarding</text>
+<rect height="16" rx="3" stroke="#948DA6" stroke-width="1" width="88" x="108" y="54"></rect><text x="112" y="65">inventory</text>
+<rect height="16" rx="3" stroke="#948DA6" stroke-width="1" width="88" x="108" y="74"></rect><text x="112" y="85">handoff</text>
+<rect height="16" rx="3" stroke="#948DA6" stroke-width="1" width="88" x="108" y="94"></rect><text x="112" y="105">satisfaction</text>
+</g>
+<rect fill="#E0736F" height="30" opacity=".18" rx="4" stroke="#E0736F" stroke-dasharray="4 3" stroke-width="1.2" width="184" x="12" y="130"></rect>
+<text fill="#E0736F" font-family="monospace" font-size="8" x="30" y="149">office: diagnosis, treatment, test</text>
+<text fill="#6C6580" font-family="monospace" font-size="7.5" x="12" y="184">green = where to start; red = never</text>
+</svg></div>
+<div class="fig" data-cap="&lt;b&gt;Fig.&lt;/b&gt; a confirmação em seis elos. A agenda entra às 17h; a mensagem padrão sai; a verificação confere nome, data, horário e profissional; qualquer resposta com pergunta (âmbar) vai para a recepção; às 8h o resultado é a lista de status. O motivo da consulta (vermelho) nunca entra no fluxo." data-fig="3"><svg aria-hidden="true" fill="none" viewbox="0 0 220 200">
+<rect height="20" rx="4" stroke="#948DA6" stroke-width="1.5" width="70" x="12" y="16"></rect><text fill="#ECE6D9" font-family="monospace" font-size="7.5" x="18" y="30">5 p.m. appointment</text>
+<path d="M82 26 h14" stroke="#948DA6" stroke-width="1.2"></path>
+<rect height="20" rx="4" stroke="#948DA6" stroke-width="1.5" width="70" x="96" y="16"></rect><text fill="#ECE6D9" font-family="monospace" font-size="7.5" x="102" y="30">default message</text>
+<path d="M131 36 v14" stroke="#948DA6" stroke-width="1.2"></path>
+<rect height="20" rx="4" stroke="#7CE0C6" stroke-width="1.5" width="70" x="96" y="50"></rect><text fill="#7CE0C6" font-family="monospace" font-size="7" x="100" y="64">check 4 fields</text>
+<path d="M131 70 v14" stroke="#948DA6" stroke-width="1.2"></path>
+<rect height="20" rx="4" stroke="#948DA6" stroke-width="1.5" width="70" x="96" y="84"></rect><text fill="#ECE6D9" font-family="monospace" font-size="7.5" x="104" y="98">read response</text>
+<path d="M166 94 h20" stroke="#F2B45C" stroke-width="1.2"></path>
+<rect height="20" rx="4" stroke="#F2B45C" stroke-width="1.5" width="28" x="186" y="84"></rect><text fill="#F2B45C" font-family="monospace" font-size="6.5" x="189" y="98">question</text>
+<path d="M200 104 v14" stroke="#F2B45C" stroke-width="1.2"></path><circle cx="200" cy="126" r="8" stroke="#F2B45C" stroke-width="1.5"></circle><text fill="#F2B45C" font-family="monospace" font-size="8" x="196" y="130">H</text>
+<path d="M131 104 v14" stroke="#948DA6" stroke-width="1.2"></path>
+<rect height="20" rx="4" stroke="#948DA6" stroke-width="1.5" width="70" x="96" y="118"></rect><text fill="#ECE6D9" font-family="monospace" font-size="7" x="100" y="132">records status</text>
+<path d="M131 138 v14" stroke="#7CE0C6" stroke-width="1.2"></path>
+<rect fill="#221f2e" height="22" rx="5" stroke="#7CE0C6" stroke-width="1.5" width="102" x="80" y="152"></rect><text fill="#7CE0C6" font-family="monospace" font-size="7.5" x="86" y="167">8h: status list</text>
+<rect height="28" rx="4" stroke="#E0736F" stroke-dasharray="3 3" stroke-width="1.2" width="66" x="12" y="60"></rect><text fill="#E0736F" font-family="monospace" font-size="6.5" x="16" y="72">reason for</text><text fill="#E0736F" font-family="monospace" font-size="6.5" x="16" y="82">appointment</text>
+<path d="M78 74 h10" stroke="#E0736F" stroke-width="1.2"></path><path d="M84 68 l8 12 M92 68 l-8 12" stroke="#E0736F" stroke-width="1.5"></path>
+<text fill="#6C6580" font-family="monospace" font-size="7.5" x="12" y="192">question unrelated to scheduling → person</text>
+</svg></div>
+<div class="fig" data-cap="&lt;b&gt;Fig.&lt;/b&gt; a glosa em seis elos. O demonstrativo do convênio entra; por código divergente, o agente cruza com a tabela e escreve o recurso; por autorização prévia, valor alto ou repetição (âmbar), separa para a gestora. O recurso pronto espera a assinatura dela. Enviar ao convênio nunca é do agente." data-fig="4"><svg aria-hidden="true" fill="none" viewbox="0 0 220 200">
+<rect height="20" rx="4" stroke="#948DA6" stroke-width="1.5" width="90" x="12" y="14"></rect><text fill="#ECE6D9" font-family="monospace" font-size="7" x="18" y="28">statement</text>
+<path d="M57 34 v14" stroke="#948DA6" stroke-width="1.2"></path>
+<polygon fill="#221f2e" points="57,48 100,70 57,92 14,70" stroke="#948DA6" stroke-width="1.2"></polygon><text fill="#ECE6D9" font-family="monospace" font-size="6.5" x="36" y="73">reason?</text>
+<path d="M57 92 v16" stroke="#7CE0C6" stroke-width="1.2"></path><text fill="#7CE0C6" font-family="monospace" font-size="6.5" x="60" y="104">code</text>
+<rect height="20" rx="4" stroke="#7CE0C6" stroke-width="1.5" width="90" x="12" y="108"></rect><text fill="#ECE6D9" font-family="monospace" font-size="6.5" x="16" y="122">cross-check against the table</text>
+<path d="M57 128 v12" stroke="#7CE0C6" stroke-width="1.2"></path>
+<rect height="20" rx="4" stroke="#7CE0C6" stroke-width="1.5" width="90" x="12" y="140"></rect><text fill="#ECE6D9" font-family="monospace" font-size="6.5" x="16" y="154">write an appeal</text>
+<path d="M57 160 v12" stroke="#7CE0C6" stroke-width="1.2"></path>
+<rect fill="#221f2e" height="20" rx="4" stroke="#7CE0C6" stroke-width="1.5" width="90" x="12" y="172"></rect><text fill="#7CE0C6" font-family="monospace" font-size="6.5" x="16" y="186">ready to sign</text>
+<path d="M100 70 h24" stroke="#F2B45C" stroke-width="1.2"></path>
+<rect height="36" rx="4" stroke="#F2B45C" stroke-width="1.5" width="84" x="124" y="52"></rect><text fill="#F2B45C" font-family="monospace" font-size="6.5" x="130" y="66">authorization ·</text><text fill="#F2B45C" font-family="monospace" font-size="6.5" x="130" y="78">&gt; 2 thousand · repeated</text>
+<path d="M166 88 v14" stroke="#F2B45C" stroke-width="1.2"></path><circle cx="166" cy="112" r="9" stroke="#F2B45C" stroke-width="1.5"></circle><text fill="#F2B45C" font-family="monospace" font-size="8" x="162" y="116">H</text>
+<rect height="22" rx="4" stroke="#E0736F" stroke-dasharray="3 3" stroke-width="1.2" width="84" x="124" y="140"></rect><text fill="#E0736F" font-family="monospace" font-size="6.5" x="132" y="155">send to the health plan</text>
+<text fill="#6C6580" font-family="monospace" font-size="7" x="124" y="180">the manager only</text>
+</svg></div>
+</div>
+<p class="railcap"></p>
+<div class="steps-ind"></div>
+<p class="sidenote">Highlight any passage to turn it into a review card.</p>
+</div></aside>
+</div>
+<div class="fecho-wrap">
+<div class="recap-autor">
+<p class="rak">Summary</p>
+<ul>
+<li>The clinic’s agent handles administrative work and never touches clinical work. The test: could a trained receptionist do it without asking a healthcare professional?</li>
+<li>Almost every clinic has the same ten administrative processes. Confirmations and claim denials are the most common starting points because they repeat every day and cost money when they go wrong.</li>
+<li>For confirmations, the reason for the visit never goes in the message, and every question that isn’t about scheduling goes to a person.</li>
+<li>For claim denials, the agent cross-checks against the table and prepares the appeal; high amounts, repeat denials, and prior authorization go to the manager, and she sends it to the insurer.</li>
+</ul>
+</div>
+<div class="next-action">
+<p class="nak">Your next step</p>
+<p class="na-win">You’ve just clearly separated what an agent can handle at your clinic from what only the healthcare team may touch.</p>
+<p class="na-action">In the next 15 minutes, show the list of ten processes to your most experienced receptionist and ask: “Which of these takes the most time on a normal day?” If the answer differs from what you chose, write down both.</p>
+<p class="na-hook">In the next lesson, you’ll decide what the agent can see and do at the clinic: no medical records, confidentiality as a fixed restriction, and a permissions matrix a clinic can sign without worry.</p>
+</div>
+</div>
+<nav class="lnav"><a href="#trilha">← track</a><a href="#aula-2">next: what the agent can see and do →</a></nav>
+<footer>Lesson 1 · Agents in the Clinic · INEMA.CLUB PRO</footer>
+<script id="cards-1" type="application/json">
+[
+  {"front":"Um paciente escreve 'a receita venceu, pode renovar?'. Que parte disso o agente da clínica pode tratar, e o que ele faz com o resto?","back":"Nada da renovação: é clínico. O agente pode só registrar que chegou uma dúvida fora do assunto agenda e encaminhar para a recepção, que passa ao profissional. Ele não comenta nem promete."},
+  {"front":"Sua clínica quer começar pelo agente de pesquisa de satisfação. Pelo critério do caderno, que pergunta você faz antes de aceitar?","back":"Repete todo dia, envolve mais de uma pessoa e custa dinheiro ou paciente quando falha? Satisfação raramente passa no terceiro; confirmação e glosas costumam passar nos três. Comece pelo que passa."},
+  {"front":"Qual a diferença entre a exceção 'paciente respondeu com pergunta' e a exceção 'glosa repetida no mesmo paciente' quanto a quem decide?","back":"A pergunta vai para a recepção, que decide se responde ou passa à enfermagem. A glosa repetida vai para a gestora, porque pode indicar problema de cadastro ou de tabela, não só um erro isolado."},
+  {"front":"Uma glosa é por radiografia sem laudo anexado. O laudo é dado de saúde. Como o agente participa sem tocar no laudo?","back":"Ele lista quais guias precisam de laudo e prepara o texto do recurso; a assistente anexa o laudo. O agente prepara, a pessoa toca no dado sensível."},
+  {"front":"Por que a mensagem de confirmação nunca cita o motivo da consulta, mesmo que isso ajudasse o paciente a lembrar?","back":"Porque motivo de consulta é dado de saúde, e a mensagem sai da clínica por um canal externo. Nome, data, horário e profissional bastam para confirmar; o resto é risco sem ganho."}
+]
+</script>
+<!-- COMPLETUDE aula-1 | tipo=FUNDAMENTO | steps=4
+  [OK] promise            .promise no cold-open (1)
+  [OK] why                .why após a promessa (1)
+  [OK] tempo              data-tempo="21min" no view + render no cold-open (1)
+  [OK] exemplo-profissao  exemplo aplicado em 100% dos steps (4/4: Renata gestora clínica médica, Patrícia consultório odontológico, Renata, Patrícia)
+  [OK] apoio-visual       figura conceitual legendada em 100% dos steps (4/4, data-fig 1..4)
+  [OK] practice           .practice[data-mode="tarefa"] (exatamente 1)
+  [OK] psafe              .psafe dentro da prática (1)
+  [OK] pgoal-tempo        .pgoal com tempo declarado (~12 min) (1)
+  [OK] recap-autor        .recap-autor no fecho (1)
+  [OK] next-action        .next-action no fecho (1)
+  [OK] cards              <script id="cards-1"> presente (5 cartões: aplicação, decisão, contraste, aplicação, pergunta)
+  [OK] anti-duplicacao    §11.3 — 3 testes passam (substring / forma / operação)
+  [OK] teste-se-FUND      tipo=FUNDAMENTO: presente (1 quiz data-fb, step 01)
+  dosagem: quiz + cartões + qbefore-after (step 02) + qanchor (step 04) = 4 obrigatórios (teto 5). densidade: 2 quadros em 4 steps, não adjacentes. jargão de domínio: glosa (.gterm).
+-->
+</section>
+<!-- ===== AULA 2 · FERRAMENTA ===== -->
+<section class="view" data-aula="2" data-tempo="21min" id="v-aula-2">
+<header class="hero"><div class="hero-inner">
+<div>
+<p class="kicker">Health Workbook · Lesson 2</p>
+<h1>What the agent can<br/><em>see and do in a clinic</em></h1>
+<p class="promise">By the end of this lesson, you can decide on a clinic agent's permission matrix, keep medical records and health data out of reach, write confidentiality and LGPD into the constraints, and assign a named owner to each permission.</p>
+<p class="why">A clinic is where agent governance stops being a best practice and becomes an obligation. A registration record has a name, ID, insurance plan, and phone number; the medical record has the rest of a person’s life. The LGPD treats health data as sensitive, with stricter rules, and the Medical Council treats confidentiality as a professional duty, not a technology duty. The good news: the administrative agent doesn’t need any of that to do its job. This lesson shows where to draw the line and how to write it into a matrix the clinic owner can sign without fear.</p>
+<p class="cue"><span class="arw">↓</span> role to study</p>
+</div>
+<!-- herofig · METÁFORA-DO-MUNDO-REAL: arquivo de prontuários trancado com chave, ao lado de um quadro de agenda aberto -->
+<div class="herofig"><svg aria-hidden="true" fill="none" viewbox="0 0 300 240">
+<rect fill="#1a1824" height="170" rx="6" stroke="#948DA6" stroke-width="2" width="110" x="30" y="40"></rect>
+<rect height="34" rx="3" stroke="#948DA6" stroke-width="2" width="86" x="42" y="54"></rect><rect height="34" rx="3" stroke="#948DA6" stroke-width="2" width="86" x="42" y="98"></rect><rect height="34" rx="3" stroke="#948DA6" stroke-width="2" width="86" x="42" y="142"></rect>
+<rect fill="#948DA6" height="10" rx="2" width="18" x="76" y="66"></rect><rect fill="#948DA6" height="10" rx="2" width="18" x="76" y="110"></rect><rect fill="#948DA6" height="10" rx="2" width="18" x="76" y="154"></rect>
+<rect fill="#E0736F" height="22" rx="3" width="30" x="70" y="186"></rect><path d="M77 186 v-8 a8 8 0 0 1 16 0 v8" fill="none" stroke="#E0736F" stroke-width="3"></path>
+<rect fill="#ECE6D9" height="150" opacity=".9" rx="6" width="120" x="160" y="40"></rect>
+<path d="M172 60 h96 M172 84 h96 M172 108 h96 M172 132 h96 M172 156 h96" opacity=".3" stroke="#0E0D14" stroke-width="1.5"></path>
+<rect fill="#7CE0C6" height="12" rx="2" width="60" x="176" y="66"></rect><rect fill="#7CE0C6" height="12" rx="2" width="80" x="176" y="90"></rect><rect fill="#F2B45C" height="12" rx="2" width="46" x="176" y="114"></rect><rect fill="#7CE0C6" height="12" rx="2" width="70" x="176" y="138"></rect>
+<path d="M150 30 v190" stroke="#F2B45C" stroke-dasharray="6 5" stroke-width="2"></path>
+<text fill="#E0736F" font-family="monospace" font-size="9" x="40" y="30">patient record</text>
+<text fill="#7CE0C6" font-family="monospace" font-size="9" x="196" y="30">scheduling</text>
+</svg></div>
+</div></header>
+<div class="layout">
+<div class="col">
+<section class="step" data-fig="1" data-kind="fundamento">
+<h2><span class="n">01</span> Registration, scheduling, and billing are on one side; medical records are on the other</h2>
+<p>Every clinic stores information in two categories that often live in the same system. On one side, the <b>administrative</b>: registration (name, phone, insurance, responsible party), schedule (who, when, with whom), billing (forms, codes, amounts), and each insurance provider’s table. On the other side, the <b>patient record</b>: reason for the appointment, progress notes, tests, diagnosis, prescription. The administrative agent works only with the first set.</p>
+<p>The LGPD classifies health data as <span class="gterm" data-def="Categoria da LGPD para dados que podem causar discriminação ou dano grave se expostos: saúde, origem, religião, vida sexual, biometria. Exigem base legal específica e proteção reforçada." tabindex="0">sensitive data</span>, with stricter rules than those for standard registration. This makes the decision simpler, not more complicated: the agent cannot access sensitive data, period. It’s not "with approval," and it’s not "just for summarizing." If the administrative work comes out the same without the medical record—and it does—the medical record stays out of reach.</p>
+<!-- ex-prof --><p>Renata made the agent’s context inventory for confirmations and claim denials: schedule, patient registration with guardians for minors, standard message, insurance statement, procedure fee schedule. Five sources, none of them the medical record. When the system vendor asked, “Do you want the agent to have access to the clinical module too, since it’s being integrated?” the answer was no, and it was documented.</p>
+<div class="mobfig" data-mobfig="1"></div>
+<button class="readbtn" data-read="s1">mark as read</button>
+</section>
+<section class="step" data-fig="2" data-kind="ferramenta" data-versao="ChatGPT · Claude · Copilot, set/2026">
+<h2><span class="n">02</span> Where this runs today, and the mistake a clinic can’t make</h2>
+<p>As of September 2026, a clinic agent runs in three ways, from temporary to permanent. In the <b>AI chat with project folder</b> (ChatGPT, Claude, Copilot), you keep the standard message, the insurance agreement table, and the appeal templates, and attach the statement each week, without patient names. In the <b>the clinic's messaging platform</b>, many already offer automatic confirmation based on rules. And in the <b>integration with the clinic system</b> through the service door, the agent reads the schedule on its own, set up by whoever maintains the system, under an agreement that covers personal data.</p>
+<p>The first approach works for learning and claim denials. For confirmations involving patient phone numbers, prefer the second or third approach from the start: a generic AI chat is a service outside the clinic, and a phone number with a name is personal data. This may seem bureaucratic, but it works like the rule against leaving the patient list on the printer: it’s not about the tool; it’s about where the data passes.</p>
+<!-- ex-prof --><p>Patrícia started with approach one for X-ray claim denials: a project folder with the insurance fee schedule and appeal template, a statement attached each week, and only the claim number and code. For following up on treatment plans, which involves patient names and phone numbers, she waited for integration with the practice management system, which already had a service interface.</p>
+<div class="qerr">
+<p class="qk">Common mistake</p>
+<p class="qerr-txt"><b>Export the day’s schedule with the "reason for visit" column and paste it into an AI chat to "test the confirmation."</b> This happens because the system's default export includes every column and no one removes them. The reason for an appointment is health data leaving the clinic for an external service. Before any test, export only the four columns used in the confirmation: name, date, time, provider. And replace the names in the tests.</p>
+</div>
+<div class="mobfig" data-mobfig="2"></div>
+<button class="readbtn" data-read="s2">mark as read</button>
+</section>
+<section class="step" data-fig="3" data-kind="fundamento">
+<h2><span class="n">03</span> A clinic's permission matrix follows a predictable ladder</h2>
+<p>Applying the base course's seven actions to the appointment confirmation and claim-denial agent: <b>read</b> scheduling, administrative registration, and statement: allowed; medical records: never; <b>write</b> schedule status and appeal draft, allowed; <b>change</b> scheduling (reschedule, open a slot), with reception approval; <b>send</b> the standard confirmation message is allowed because the text is fixed and approved; sending any other text or filing an appeal with the health plan requires approval; <b>purchase</b>, <b>delete</b> e <b>approve</b>, it’s not allowed.</p>
+<p>The only line that departs from the base course's ladder is "send the standard confirmation: allowed." This is defensible because the text doesn't change, the four fields are verified, and nothing beyond them is included. Any message that requires new text goes back to "with approval." And every permission has a named owner: the manager for reading and writing, the front desk coordinator for changing the schedule, and the provider for signing appeals and certificates.</p>
+<!-- ex-prof --><p>At Renata’s clinic, the matrix has eight rows and fits on a sheet posted in the manager’s office. The line that sparked discussion was “release an opening to the waitlist”: reception wanted “allowed” to speed things up. It stayed “with approval” for the first two months; after the test cases passed and the log stayed clean, it became “allowed,” with a limit of two openings per day.</p>
+<div class="mobfig" data-mobfig="3"></div>
+<button class="readbtn" data-read="s3">mark as read</button>
+</section>
+<section class="step" data-fig="4" data-kind="ferramenta" data-versao="LGPD e normas do CFM/CFO, set/2026">
+<h2><span class="n">04</span> Confidentiality, consent, and documentation: what to write before you turn it on</h2>
+<p>Three things must be put in writing before any clinic agent runs, and none of them is technology. <b>Confidentiality</b>: fixed constraint in the request, "no information beyond name, date, time, and provider in any message". <b>Consent and channel</b>: the patient authorized messages to that phone number, and for minors, messages go only to the registered responsible party. <b>Record</b>: every message sent and every prepared appeal are logged with the date, content, and approver, so you can answer any question from a patient, insurance plan, or board in one minute.</p>
+<p>The detail that changes over time is the regulation, not the principle. Resolutions from the Federal Councils of Medicine and Dentistry on patient communication and technology use are updated; Brazil’s data protection law has new regulations from the national authority. That’s why this step is labeled as a tool, with a date: the principle (confidentiality, consent, logging) is foundational; check the exact wording with whoever handles the clinic’s legal matters when it’s time to sign.</p>
+<!-- ex-prof --><p>Patrícia added a new field to the practice’s patient registration form: “accepts confirmation and treatment plan follow-up messages: yes/no,” completed at the first visit using the administrative consent form. The agent only contacts people marked “yes.” It was the cheapest change in the whole project, and the one the dentist who owns the practice liked most: the question “can it message everyone?” no longer came up.</p>
+<div class="qsteps">
+<p class="qsk">Clinic Agent Governance Checklist</p>
+<ol>
+<li><b>Medical records and health data out of scope</b>, in writing, including the reason for the appointment.</li>
+<li><b>Confidentiality restriction in the request</b>: only name, date, time, and provider in any message.</li>
+<li><b>Consent and channel</b>: field in the registration record; for minors, only through the responsible party.</li>
+<li><b>Seven-action matrix with owners</b>: sending a standard message is allowed; new text, an appeal to the insurance provider, and changing the schedule require approval; purchasing, deleting, and approving are not allowed.</li>
+<li><b>Record saved</b> of every message and appeal, and who approved it.</li>
+<li><b>Wording review</b> with whoever handles the clinic’s legal matters, using the current regulation date.</li>
+</ol>
+</div>
+<div class="mobfig" data-mobfig="4"></div>
+<button class="readbtn" data-read="s4">mark as read</button>
+</section>
+<!-- modo analise justificado: conceder permissão real a um agente sobre dados de paciente é ação com consequência que não se desfaz; a decisão é treinada num caso antes de ser aplicada -->
+<section class="practice" data-mode="analise" data-practice="p2">
+<p class="pk">Practice now <span class="pcount">0/4 done</span></p>
+<h3 class="ph">The Clínica Horizonte case: decide the permissions, then yours</h3>
+<p class="pgoal">In about 12 minutes, read the case, decide on the matrix and which data stays off-limits, compare with the answer key, then fill in your clinic agent’s matrix.</p>
+<p class="psafe">This workbook is intentionally on paper: permission to access patient data is the most consequential decision in this workbook, so you practice on a case before making your own decision. No system is configured. Keep your matrix and bring it to the clinic owner and whoever manages the system.</p>
+<p><b>The case.</b> Clínica Horizonte has eight exam rooms, four insurance plans, and 120 appointments per day. The manager, Mariana, designed an agent that confirms appointments, reads replies, records statuses, and prepares claim-denial appeals. The system vendor also offered to integrate the clinical module "so the agent can remind patients to bring test results." The front desk wants the agent to reschedule appointments on its own when a patient asks. For each patient, the system has: name, CPF, phone number, insurance plan, and member ID, responsible party, reason for the appointment, medical record, attached test results.</p>
+<ol class="psteps">
+<li><label><input data-ptask="1" type="checkbox"/> For the seven actions (read, write, change schedule, send standard confirmation, send another message or resource, delete, approve), decide: allowed, allowed with approval, or not allowed. Write one line explaining each decision.</label></li>
+<li><label><input data-ptask="2" type="checkbox"/> Of the nine data items listed, mark what the agent needs to see and what stays off-limits. Apply the test: "Would the work turn out the same without this?" Also decide whether to accept the vendor’s offer to integrate the clinical module.</label></li>
+<li><label><input data-ptask="3" type="checkbox"/> Compare it with the answer key. If it differs on the clinical module or on "reschedule on its own," review steps 01 and 03.
+          <details><summary>Annotated answer key</summary>
+<p><b>Read</b> scheduling, administrative registration, and statement: allowed; medical records and test results: not allowed, ever. <b>Write</b> status and appeal draft: allowed. <b>Change the schedule</b> (reschedule, release a slot): with front desk approval in the first version; "reschedule on your own" changes a provider’s schedule and a patient’s day, so it stays out until the test run passes. <b>Send standard confirmation</b>: allowed, fixed text, and four verified fields. <b>Send another message or resource to the insurance plan</b>: always requires approval. <b>Delete</b>: not allowed. <b>Approve</b>: not allowed.</p>
+<p><b>Data.</b> Name, phone number, insurance plan, guardian: needed. Member ID: only for the claim-denial specialist, to match the claim form; out of scope for the confirmation specialist. CPF: not needed, out of scope. Reason for the visit, medical records, tests: out of scope, no discussion. <b>Healthcare module</b>: no. "Remember to bring your test results" sounds administrative, but it requires knowing which test, and that’s health data. The administrative alternative is the standard message "bring the tests requested by your provider," without naming any.</p>
+<p><b>Owners.</b> Mariana for reading, writing, and sending the standard message; the reception coordinator for changing the schedule; the responsible professional for signing the appeal. Everything logged and saved.</p>
+</details>
+</label></li>
+<li><label><input data-ptask="4" type="checkbox"/> Fill in the agent matrix for YOUR clinic: seven actions, response, named owner, and the list of data out of scope. It’s ready when medical records and reason for visit are on the out-of-scope list and every row has an owner.</label></li>
+</ol>
+<p class="pdone">You’ve just decided, in writing, what an agent can see and do at your clinic, with the medical record kept out of reach. This is the document the clinic owner needs to say yes.</p>
+</section>
+</div>
+<aside class="rail"><div class="railsticky">
+<div class="figstage">
+<div class="fig on" data-cap="&lt;b&gt;Fig.&lt;/b&gt; o mesmo sistema da clínica, dividido por uma cerca. À esquerda, cadastro, agenda, faturamento e tabela do convênio: o agente alcança. À direita, motivo, evolução, exames, diagnóstico e prescrição: dado sensível, fora do alcance, sem 'com aprovação'." data-fig="1"><svg aria-hidden="true" fill="none" viewbox="0 0 220 200">
+<rect height="170" rx="10" stroke="#37324a" stroke-width="1.5" width="200" x="10" y="14"></rect>
+<text fill="#948DA6" font-family="monospace" font-size="7.5" x="18" y="30">clinic system</text>
+<path d="M110 40 v136" stroke="#E0736F" stroke-dasharray="5 4" stroke-width="2"></path>
+<g fill="#ECE6D9" font-family="monospace" font-size="7">
+<rect height="18" rx="3" stroke="#7CE0C6" stroke-width="1.2" width="84" x="18" y="44"></rect><text x="24" y="56">admin. registration</text>
+<rect height="18" rx="3" stroke="#7CE0C6" stroke-width="1.2" width="84" x="18" y="68"></rect><text x="24" y="80">scheduling</text>
+<rect height="18" rx="3" stroke="#7CE0C6" stroke-width="1.2" width="84" x="18" y="92"></rect><text x="24" y="104">billing</text>
+<rect height="18" rx="3" stroke="#7CE0C6" stroke-width="1.2" width="84" x="18" y="116"></rect><text x="24" y="128">insurance plan table</text>
+<rect height="18" rx="3" stroke="#E0736F" stroke-dasharray="3 3" stroke-width="1.2" width="84" x="118" y="44"></rect><text fill="#E0736F" x="124" y="56">reason</text>
+<rect height="18" rx="3" stroke="#E0736F" stroke-dasharray="3 3" stroke-width="1.2" width="84" x="118" y="68"></rect><text fill="#E0736F" x="124" y="80">progress note</text>
+<rect height="18" rx="3" stroke="#E0736F" stroke-dasharray="3 3" stroke-width="1.2" width="84" x="118" y="92"></rect><text fill="#E0736F" x="124" y="104">tests</text>
+<rect height="18" rx="3" stroke="#E0736F" stroke-dasharray="3 3" stroke-width="1.2" width="84" x="118" y="116"></rect><text fill="#E0736F" x="124" y="128">diagnosis</text>
+</g>
+<rect fill="#221f2e" height="26" rx="5" stroke="#7CE0C6" stroke-width="1.5" width="84" x="18" y="146"></rect><text fill="#7CE0C6" font-family="monospace" font-size="7.5" x="34" y="163">agent</text>
+<text fill="#E0736F" font-family="monospace" font-size="7" x="122" y="162">sensitive data</text>
+<text fill="#6C6580" font-family="monospace" font-size="7.5" x="30" y="194">the work gets done just the same without the right-hand side</text>
+</svg></div>
+<div class="fig" data-cap="&lt;b&gt;Fig.&lt;/b&gt; três caminhos para o agente de clínica. Chat com pasta de projeto (só glosas, sem nome de paciente); plataforma de mensagens da clínica (confirmação por regra); integração pela porta de serviço (agenda lida sozinha, com contrato). A seta vermelha é o erro: exportar a agenda com motivo e colar no chat." data-fig="2"><svg aria-hidden="true" fill="none" viewbox="0 0 220 200">
+<rect fill="#221f2e" height="60" rx="8" stroke="#948DA6" stroke-width="1.5" width="68" x="140" y="70"></rect><text fill="#ECE6D9" font-family="monospace" font-size="8" x="152" y="104">agent</text>
+<rect height="26" rx="4" stroke="#948DA6" stroke-width="1.2" width="76" x="12" y="20"></rect><text fill="#ECE6D9" font-family="monospace" font-size="6.5" x="16" y="31">chat + folder</text><text fill="#948DA6" font-family="monospace" font-size="6.5" x="16" y="41">claim denials, unnamed</text>
+<path d="M88 33 h30 l22 40" fill="none" stroke="#948DA6" stroke-dasharray="3 3" stroke-width="1.2"></path>
+<rect height="26" rx="4" stroke="#7CE0C6" stroke-width="1.2" width="76" x="12" y="88"></rect><text fill="#ECE6D9" font-family="monospace" font-size="6.5" x="16" y="99">messaging</text><text fill="#948DA6" font-family="monospace" font-size="6.5" x="16" y="109">confirmation</text>
+<path d="M88 100 h52" stroke="#7CE0C6" stroke-width="1.5"></path>
+<rect height="26" rx="4" stroke="#F2B45C" stroke-width="1.2" width="76" x="12" y="156"></rect><text fill="#ECE6D9" font-family="monospace" font-size="6.5" x="16" y="167">integration</text><text fill="#948DA6" font-family="monospace" font-size="6.5" x="16" y="177">scheduling + contract</text>
+<path d="M88 168 h30 l22 -40" fill="none" stroke="#F2B45C" stroke-width="1.5"></path>
+<rect height="36" rx="4" stroke="#E0736F" stroke-dasharray="3 3" stroke-width="1.2" width="88" x="120" y="150"></rect><text fill="#E0736F" font-family="monospace" font-size="6.5" x="126" y="164">appointment + reason</text><text fill="#E0736F" font-family="monospace" font-size="6.5" x="126" y="176">pasted into the chat</text>
+<path d="M150 150 l20 -14" stroke="#E0736F" stroke-width="1.5"></path><path d="M160 136 l10 12 M170 136 l-10 12" stroke="#E0736F" stroke-width="1.5"></path>
+</svg></div>
+<div class="fig" data-cap="&lt;b&gt;Fig.&lt;/b&gt; a matriz do agente de clínica: sete ações e a escada da primeira versão. A única linha fora da escada do curso-base é 'enviar confirmação padrão: pode' (texto fixo, quatro campos verificados). Cada linha com dono." data-fig="3"><svg aria-hidden="true" fill="none" viewbox="0 0 220 200">
+<g fill="#948DA6" font-family="monospace" font-size="6.5"><text x="90" y="18">can</text><text x="124" y="18">w/ approval</text><text x="172" y="18">no</text></g>
+<g fill="#ECE6D9" font-family="monospace" font-size="7">
+<text x="10" y="36">read (admin)</text><text x="10" y="56">write</text><text x="10" y="76">change the schedule</text><text x="10" y="96">send default</text><text x="10" y="116">send another</text><text x="10" y="136">delete</text><text x="10" y="156">approve</text>
+</g>
+<path d="M86 24 v140 M120 24 v140 M166 24 v140 M86 24 h116" stroke="#37324a" stroke-width="1"></path>
+<rect fill="#7CE0C6" height="12" opacity=".9" rx="2" width="24" x="90" y="28"></rect>
+<rect fill="#7CE0C6" height="12" opacity=".9" rx="2" width="24" x="90" y="48"></rect>
+<rect fill="#F2B45C" height="12" opacity=".9" rx="2" width="34" x="126" y="68"></rect>
+<rect fill="#7CE0C6" height="12" opacity=".9" rx="2" width="24" x="90" y="88"></rect><text fill="#7CE0C6" font-family="monospace" font-size="6" x="116" y="98">*fixed</text>
+<rect fill="#F2B45C" height="12" opacity=".9" rx="2" width="34" x="126" y="108"></rect>
+<rect fill="#E0736F" height="12" opacity=".9" rx="2" width="24" x="172" y="128"></rect>
+<rect fill="#E0736F" height="12" opacity=".9" rx="2" width="24" x="172" y="148"></rect>
+<text fill="#6C6580" font-family="monospace" font-size="7" x="10" y="180">* fixed text + 4 verified fields</text>
+<text fill="#6C6580" font-family="monospace" font-size="7" x="10" y="192">patient record: not even in the “read” column</text>
+</svg></div>
+<div class="fig" data-cap="&lt;b&gt;Fig.&lt;/b&gt; os três documentos que entram antes de ligar o agente: sigilo como restrição no pedido, consentimento e canal no cadastro (menor só pelo responsável), e o registro guardado de toda mensagem e recurso. Embaixo, o carimbo de data: a norma muda, o princípio não." data-fig="4"><svg aria-hidden="true" fill="none" viewbox="0 0 220 200">
+<rect fill="#ECE6D9" height="70" opacity=".12" rx="4" stroke="#7CE0C6" stroke-width="1.2" width="60" x="12" y="20"></rect><text fill="#7CE0C6" font-family="monospace" font-size="7" x="18" y="40">confidentiality</text><path d="M18 50 h46 M18 60 h40 M18 70 h44" stroke="#948DA6" stroke-width="1"></path>
+<rect fill="#ECE6D9" height="70" opacity=".12" rx="4" stroke="#7CE0C6" stroke-width="1.2" width="60" x="80" y="20"></rect><text fill="#7CE0C6" font-family="monospace" font-size="7" x="86" y="40">consent.</text><rect height="8" stroke="#7CE0C6" stroke-width="1" width="8" x="86" y="50"></rect><text fill="#ECE6D9" font-family="monospace" font-size="6" x="98" y="57">accepts messages</text><text fill="#948DA6" font-family="monospace" font-size="6" x="86" y="74">shorter → resp.</text>
+<rect fill="#ECE6D9" height="70" opacity=".12" rx="4" stroke="#7CE0C6" stroke-width="1.2" width="60" x="148" y="20"></rect><text fill="#7CE0C6" font-family="monospace" font-size="7" x="154" y="40">record</text><path d="M154 50 h46 M154 58 h46 M154 66 h46 M154 74 h46" stroke="#948DA6" stroke-width="1"></path>
+<path d="M42 90 v20 M110 90 v20 M178 90 v20 M42 110 h136" stroke="#948DA6" stroke-width="1.2"></path><path d="M110 110 v14" stroke="#7CE0C6" stroke-width="1.5"></path>
+<rect fill="#221f2e" height="24" rx="6" stroke="#7CE0C6" stroke-width="1.5" width="80" x="70" y="124"></rect><text fill="#7CE0C6" font-family="monospace" font-size="8" x="84" y="140">connect agent</text>
+<rect height="22" rx="4" stroke="#F2B45C" stroke-dasharray="3 3" stroke-width="1.2" width="100" x="60" y="164"></rect><text fill="#F2B45C" font-family="monospace" font-size="7" x="66" y="179">current standard: Sep/2026</text>
+</svg></div>
+</div>
+<p class="railcap"></p>
+<div class="steps-ind"></div>
+<p class="sidenote">Highlight any passage to turn it into a review card.</p>
+</div></aside>
+</div>
+<div class="fecho-wrap">
+<div class="recap-autor">
+<p class="rak">Summary</p>
+<ul>
+<li>The clinic system has two sides. Registration, scheduling, billing, and the insurance fee schedule are for the agent; medical records and all health data stay out of scope, with no “approval” option.</li>
+<li>The agent runs in a chat with a project folder (claim denials only, no names), in the clinic’s messaging system, or integrated with the clinic’s system. A phone number with a name doesn’t go through a generic chat.</li>
+<li>The clinic's matrix follows the base course's ladder, with one defensible exception: sending the standard confirmation is allowed because the text is fixed and verified.</li>
+<li>Before connecting: confidentiality as a constraint, consent and channel in the record, log kept. The regulation changes over time; the principle doesn't.</li>
+</ul>
+</div>
+<div class="next-action">
+<p class="nak">Your next step</p>
+<p class="na-win">You’ve just decided what an agent can see and do at your clinic, with the medical record kept out of reach and an owner assigned to each permission.</p>
+<p class="na-action">In the next 15 minutes, open your system’s registration form and check whether it has a consent field for messages. If it doesn’t, write the field text and send it to the person who manages the system.</p>
+<p class="na-hook">In the last lesson, you’ll build everything in the Agent Architect Kit, starting from the healthcare preset, and rehearse your clinic’s agent in a chat with a fictional case.</p>
+</div>
+</div>
+<nav class="lnav"><a href="#aula-1">← lesson 1</a><a href="#aula-3">next: the specification in the kit →</a></nav>
+<footer>Lesson 2 · Agents in the Clinic · INEMA.CLUB PRO</footer>
+<script id="cards-2" type="application/json">
+[
+  {"front":"O fornecedor do sistema oferece integrar o módulo clínico 'para o agente lembrar o paciente de trazer exames'. O que você responde e qual a alternativa?","back":"Não. Saber qual exame é dado de saúde. A alternativa administrativa é a mensagem padrão 'traga os exames solicitados pelo profissional', sem nomear nenhum."},
+  {"front":"Uma recepcionista exportou a agenda de amanhã para testar a confirmação no chat. Que coluna você confere antes de ela colar, e por quê?","back":"Motivo da consulta (e qualquer outra além de nome, data, horário, profissional). É dado de saúde saindo da clínica para um serviço externo. Exportar só as quatro colunas e trocar os nomes no teste."},
+  {"front":"Por que 'enviar confirmação padrão' pode ser 'pode' enquanto 'enviar recurso ao convênio' é 'com aprovação'?","back":"A confirmação tem texto fixo aprovado e quatro campos verificados; nada novo entra. O recurso tem texto que varia por guia e sai para um terceiro, e a assinatura é do profissional."},
+  {"front":"A recepção quer que o agente remarque sozinho quando o paciente pedir. Como você decide, e quando isso pode mudar?","back":"Com aprovação na primeira versão: muda a agenda de um profissional e o dia de um paciente. Vira 'pode', talvez com limite diário, depois de a bateria passar e um ou dois meses de registro limpo."},
+  {"front":"Qual foi a mudança mais barata do projeto do consultório de Patrícia, e o que ela resolveu?","back":"Um campo no cadastro: 'aceita mensagem: sim/não', preenchido na primeira visita. Resolveu consentimento e canal, e acabou com a pergunta 'ele pode mandar mensagem para todo mundo?'."}
+]
+</script>
+<!-- COMPLETUDE aula-2 | tipo=FERRAMENTA | steps=4
+  [OK] promise            .promise no cold-open (1)
+  [OK] why                .why após a promessa (1)
+  [OK] tempo              data-tempo="21min" no view + render no cold-open (1)
+  [OK] exemplo-profissao  exemplo aplicado em 100% dos steps (4/4: Renata, Patrícia, Renata, Patrícia)
+  [OK] apoio-visual       figura conceitual legendada em 100% dos steps (4/4, data-fig 1..4)
+  [OK] practice           .practice[data-mode="analise"] (exatamente 1; modo justificado: permissão sobre dado de paciente é irreversível)
+  [OK] psafe              .psafe dentro da prática (1)
+  [OK] pgoal-tempo        .pgoal com tempo declarado (~12 min) (1)
+  [OK] recap-autor        .recap-autor no fecho (1)
+  [OK] next-action        .next-action no fecho (1)
+  [OK] cards              <script id="cards-2"> presente (5 cartões opcionais: decisão, aplicação, contraste, decisão, pergunta)
+  [OK] anti-duplicacao    §11.3 — 3 testes passam (substring / forma / operação)
+  [N/A] teste-se-FUND     aula é FERRAMENTA (obrigação não se aplica); sem teste-se opcional
+  dosagem: qerr (step 02) + qsteps (step 04) obrigatórios + cartões opcionais = 3 (teto 5). densidade: 2 quadros em 4 steps, não adjacentes. data-versao nos steps 02 e 04. rampa de acesso antes da integração ("regra da impressora").
+-->
+</section>
+<!-- ===== AULA 3 · PRÁTICA/INTEGRAÇÃO ===== -->
+<section class="view" data-aula="3" data-tempo="24min" id="v-aula-3">
+<header class="hero"><div class="hero-inner">
+<div>
+<p class="kicker">Health Workbook · Lesson 3</p>
+<h1>Your specification in the kit:<br/><em>confirmations and denial codes</em></h1>
+<p class="promise">By the end of this lesson, you can build your clinic agent's specification in the Agent Architect Kit using the healthcare preset, then rehearse it in an AI chat with a fictional case.</p>
+<p class="why">You’ve mapped the process (lesson 1) and decided on the matrix (lesson 2). Now you need to bring them together on one page the clinic owner can approve in eight minutes and the person who manages the system can build from. The kit puts it together, and the healthcare preset comes prefilled with Renata’s clinic in all seven sections, with this workbook’s rules built in: medical records kept out of reach, confidentiality as a constraint, claim deadlines, and consent. Your job is to replace what’s specific to your clinic and rehearse it.</p>
+<p class="cue"><span class="arw">↓</span> role to study</p>
+</div>
+<!-- herofig · METÁFORA-DO-MUNDO-REAL: prancheta de check-in de recepção com a folha de rotina preenchida, carimbo e caneta -->
+<div class="herofig"><svg aria-hidden="true" fill="none" viewbox="0 0 300 240">
+<rect fill="#1a1824" height="180" rx="6" stroke="#948DA6" stroke-width="2" width="140" x="80" y="30"></rect>
+<rect fill="#948DA6" height="18" rx="4" width="40" x="130" y="20"></rect>
+<rect fill="#ECE6D9" height="150" opacity=".92" rx="2" width="116" x="92" y="48"></rect>
+<g opacity=".5" stroke="#0E0D14" stroke-width="2"><path d="M104 66 h60 M104 84 h80 M104 102 h70 M104 120 h84 M104 138 h60 M104 156 h76 M104 174 h50"></path></g>
+<rect fill="#7CE0C6" height="8" width="8" x="102" y="60"></rect><rect fill="#7CE0C6" height="8" width="8" x="102" y="78"></rect><rect fill="#7CE0C6" height="8" width="8" x="102" y="96"></rect><rect fill="#7CE0C6" height="8" width="8" x="102" y="114"></rect><rect fill="#F2B45C" height="8" width="8" x="102" y="132"></rect><rect fill="#7CE0C6" height="8" width="8" x="102" y="150"></rect><rect fill="#7CE0C6" height="8" width="8" x="102" y="168"></rect>
+<g transform="rotate(-10 170 186)"><rect fill="#7CE0C6" fill-opacity=".14" height="20" rx="4" stroke="#7CE0C6" stroke-width="2.5" width="60" x="140" y="176"></rect><path d="M148 186 h44" stroke="#7CE0C6" stroke-width="2.5"></path></g>
+<path d="M236 100 l30 -40" stroke="#948DA6" stroke-linecap="round" stroke-width="6"></path><path d="M232 106 l6 -9" stroke="#0E0D14" stroke-linecap="round" stroke-width="6"></path>
+<path d="M40 180 q10 -30 34 -26" fill="none" opacity=".5" stroke="#948DA6" stroke-width="2"></path>
+</svg></div>
+</div></header>
+<div class="layout">
+<div class="col">
+<section class="step" data-fig="1" data-kind="fundamento">
+<h2><span class="n">01</span> The case in the preset, and what changes from clinic to clinic</h2>
+<p>The kit’s healthcare preset is Renata’s clinic, which you followed in lessons 1 and 2, now filled out across the seven blocks: next-day confirmations and appeals by denial code, six offices, four insurance plans. The rules in this workbook are already written into it: reason for the visit and medical records out of scope, confidentiality and LGPD as fixed restrictions, minors only through their guardian, appeals to the insurer only with approval, and the exception “patient asks a question → reception.”</p>
+<p>What changes from one clinic to another is predictable: the insurance plans and their tables, the send time, the approved standard message, who approves what, and the chosen process. A dental office replaces claim denials with treatment plans. The framework stays the same; the content is yours.</p>
+<!-- ex-prof --><p>Renata loaded the preset and changed six things: the four insurance plans, the time (her clinic sends messages at 4 p.m.), the standard message, the name of the front desk coordinator as the owner of “change schedule,” the claim denial threshold that triggers a call (she uses 1,500 reais), and the test cases, which she built from fifteen real appointments and claim denials from March, with the names changed. Patrícia changed more: the entire process became treatment plan follow-up, but the matrix and out-of-scope data stayed almost the same.</p>
+<div class="qapply">
+<p class="qak">At your clinic, the first process is usually</p>
+<ul>
+<li><b>Medical clinic manager:</b> next-day confirmations and denial codes, which the preset already includes. Second process: waitlist and appointment openings.</li>
+<li><b>Dental office manager:</b> Follow-up on treatment plans presented but not finalized, with a standard message and scheduling a conversation with the dentist. Denials due to missing documents come next.</li>
+<li><b>Imaging clinic or laboratory:</b> confirmation with preparation instructions approved by the professional, without answering questions; delivering results is administrative only up to “your test results are available,” never the contents.</li>
+</ul>
+</div>
+<div class="mobfig" data-mobfig="1"></div>
+<button class="readbtn" data-read="s1">mark as read</button>
+</section>
+<section class="step" data-fig="2" data-kind="ferramenta" data-versao="Kit do Arquiteto de Agentes v1, set/2026">
+<h2><span class="n">02</span> Load the preset and select the area to enable the healthcare rules</h2>
+<p>In the kit, the “load example by area” selector has a healthcare option. When you load it, the “area” field is set to healthcare, turning on three checks the kit runs automatically, in addition to the general checks in the core course: if health data (medical records, diagnosis, report, test) isn’t on the out-of-scope list, a gap appears; if any action or goal includes a clinical term (diagnosis, prescription, care plan), another gap appears; if LGPD, consent, or confidentiality don’t appear anywhere, a third gap appears.</p>
+<p>This may look like a screen full of fields, but it works like a patient intake form: each field is a question you answer once, and the kit builds the page automatically. If you accidentally delete a confidentiality restriction, the gap appears below the specification before you hand it over.</p>
+<!-- ex-prof --><p>When adapting the preset for treatment plans, Patrícia wrote in the objective: “follow up with patients who were presented with a plan and recommend the pending treatment.” The kit flagged it: “some action or objective seems clinical.” She changed it to “follow up with patients who were presented with a plan and schedule a conversation with the dentist.” The dentist is the one who discusses the pending treatment. That was the gap she was most grateful to catch.</p>
+<div class="mobfig" data-mobfig="2"></div>
+<button class="readbtn" data-read="s2">mark as read</button>
+</section>
+<section class="step" data-fig="3" data-kind="fundamento">
+<h2><span class="n">03</span> What to change in the preset, block by block</h2>
+<p>The adaptation follows an order that helps you avoid forgetting the essentials. Start with block 1: your clinic's name and the outcome in your own words. In block 2, replace the rule decisions with your limits (when to send the second message, the claim-denial amount that sets the cutoff). In blocks 3 to 5, add the standard text, insurance plans, actual systems, and inventory with your owners. In blocks 6 and 7, add your stop-and-escalate thresholds, your set of cases, and people's names.</p>
+<p>Think twice before changing the out-of-scope data list, the confidentiality restriction, “appeal to insurer: with approval,” or “approve: not allowed.” Those lines are why the clinic owner says yes. If you need to loosen any of them, do it after a month of clean logs, one step at a time, as the core course teaches.</p>
+<!-- ex-prof --><p>Renata spent twenty minutes adapting it, and the longest part was building the test set: choosing fifteen appointments and claim denials from March that covered the tricky cases (minor without a guardian, patient with two records, repeated denial). She didn’t copy any names into the kit: she wrote “Tuesday’s appointment 7, 2 p.m., Dr. Amaral” and kept the actual reference in the clinic’s spreadsheet.</p>
+<div class="qsteps">
+<p class="qsk">Order for adapting the healthcare preset</p>
+<ol>
+<li><b>Block 1</b>: clinic name, outcome in your own words, who’s participating today.</li>
+<li><b>Blocks 2 and 3</b>: your limits for rule decisions; insurance plans, hours, and standard text in the context. Do not remove the confidentiality restriction.</li>
+<li><b>Blocks 4 and 5</b>: real systems with a service port (yes, no, ?) and an inventory with actual owners.</li>
+<li><b>Block 6</b>: your stop-and-escalate thresholds; a set of 10 to 20 cases with references, no patient names, including 3 difficult ones.</li>
+<li><b>Block 7</b>: people’s names; don’t change "approval: not allowed" or the list of excluded data until there’s a month of clean records.</li>
+<li><b>Gaps</b>: read the checklist below the specification; no healthcare-related gaps before rehearsing.</li>
+</ol>
+</div>
+<div class="mobfig" data-mobfig="3"></div>
+<button class="readbtn" data-read="s3">mark as read</button>
+</section>
+<section class="step" data-fig="4" data-kind="fundamento">
+<h2><span class="n">04</span> What the simulation usually reveals in a clinic</h2>
+<p>When you paste the specification into the chat with the kit’s simulation prompt, the chat plays the coordinator and runs a fictional case. In clinics, three gaps come up often. First: the patient replies with a question, and the specification says to route it to the front desk but doesn’t say how the front desk is notified. Second: a claim is denied for a reason that isn’t on the list, and the coordinator doesn’t know whether to stop. Third: a patient has two records, and no one said which one to use.</p>
+<p>Each one becomes a new line. "Notify the front desk using the 8 a.m. list, not a one-off message." "Claim denial for a reason outside the list: stop and escalate to the manager." Run three cases: a routine one, a difficult one, and the exception. Once all three pass, the page is ready for the clinic owner and the person who manages the system.</p>
+<!-- ex-prof --><p>During Renata’s rehearsal, the chat, acting as a coordinator, asked: “The 17-year-old patient has no guardian on file; should I send it to her phone?” The specification said “minors only through their guardian,” but didn’t say what to do when there was no guardian on file. She added: “Minor with no guardian on file: don’t send; flag for reception to call.” Ten minutes of rehearsal, and one line that would prevent a message to a teenager without authorization.</p>
+<div class="mobfig" data-mobfig="4"></div>
+<button class="readbtn" data-read="s4">mark as read</button>
+</section>
+<section class="practice" data-mode="prompt" data-practice="p3">
+<p class="pk">Practice now <span class="pcount">0/4 done</span></p>
+<h3 class="ph">Build your clinic’s specification in the kit and rehearse it</h3>
+<p class="pgoal">In about 15 minutes, load the healthcare preset into the kit, adapt it to your clinic, copy the practice prompt, and run a fictional case in an AI chat to get the list of gaps.</p>
+<p class="psafe">The specification contains no patient data: it has rules, system names, and criteria. The rehearsal case is made up (name, age, claim form, amount). No agent is built, no system is touched, and no message is sent. If the chat "sends" something in the simulation without asking for approval, that's a finding about your matrix: record it and press.</p>
+<div class="pcodewrap"><button class="pcopy" type="button">copy</button><pre class="pcode">Passo a passo (o prompt de ensaio vem pronto do kit):
+
+1. Abra https://inematds.github.io/kit-arquiteto-agentes/
+2. "carregar exemplo por área" → saúde. Confira que "área: saúde (administrativo)" ficou marcada.
+3. Adapte os sete blocos na ordem do passo 03 desta aula. Zero lacunas de saúde na lista abaixo da especificação.
+4. Em "Prompt de ensaio simulado", escreva o caso fictício, por exemplo:
+   &lt;Paciente Lúcia F. (fictícia), 17 anos, consulta quinta 14h com a Dra. Amaral, sem resposta até as 20h, responsável não cadastrado; guia 88213 glosada pelo convênio Vida por código divergente, 380 reais&gt;
+5. "copiar prompt com a especificação" → cole numa conversa nova do seu chat de IA.
+6. Leia a narração: o coordenador deve parar pelo menos uma vez (menor sem responsável, recurso com aprovação). Anote os itens de "o que faltou".</pre></div>
+<ol class="psteps">
+<li><label><input data-ptask="1" type="checkbox"/> Load the healthcare preset and adapt blocks 1 to 7 to your clinic, following the order in step 03. You’ll know it’s right when the list of gaps has no items starting with "Health:".</label></li>
+<li><label><input data-ptask="2" type="checkbox"/> Write a fictional case with at least one difficult point (a minor without a guardian, duplicate records, a denial not on the list, a patient question). Make up names, ages, and amounts.</label></li>
+<li><label><input data-ptask="3" type="checkbox"/> Copy the prompt with the specification, paste it into a new conversation, and follow along. The coordinator should stop at least once to ask for approval or ask a question. If it executed everything straight through, the matrix or the form is too loose: note where it should have stopped.</label></li>
+<li><label><input data-ptask="4" type="checkbox"/> Read the list of “what’s missing” and add each item as a new line in one of the kit’s blocks. You’re done when the corrected specification has at least one new line, you’ve downloaded the .md, and you know who you’ll send it to: the clinic owner and the person who manages the system.</label></li>
+</ol>
+<p class="pdone">You’ve just produced a specification for an agent at your clinic, with the medical record kept out of reach, and rehearsed it before building anything. This page is what separates "let’s use AI" from a project the owner will sign off on.</p>
+</section>
+</div>
+<aside class="rail"><div class="railsticky">
+<div class="figstage">
+<div class="fig on" data-cap="&lt;b&gt;Fig.&lt;/b&gt; o preset como esqueleto (cinza) e o que muda por clínica (verde): convênios, horário, texto padrão, donos, limites, bateria. As linhas âmbar são as que não se trocam sem pensar: dados fora do alcance, sigilo, recurso com aprovação, aprovar não pode." data-fig="1"><svg aria-hidden="true" fill="none" viewbox="0 0 220 200">
+<rect height="172" rx="8" stroke="#37324a" stroke-width="1.5" width="192" x="14" y="14"></rect>
+<text fill="#948DA6" font-family="monospace" font-size="7.5" x="20" y="30">health preset: Renata’s clinic</text>
+<g font-family="monospace" font-size="6.5">
+<rect fill="#7CE0C6" height="14" opacity=".8" rx="2" width="86" x="20" y="40"></rect><text fill="#0E0D14" x="24" y="50">insurance plans</text>
+<rect fill="#7CE0C6" height="14" opacity=".8" rx="2" width="90" x="110" y="40"></rect><text fill="#0E0D14" x="114" y="50">send time</text>
+<rect fill="#7CE0C6" height="14" opacity=".8" rx="2" width="86" x="20" y="60"></rect><text fill="#0E0D14" x="24" y="70">standard text</text>
+<rect fill="#7CE0C6" height="14" opacity=".8" rx="2" width="90" x="110" y="60"></rect><text fill="#0E0D14" x="114" y="70">named owners</text>
+<rect fill="#7CE0C6" height="14" opacity=".8" rx="2" width="86" x="20" y="80"></rect><text fill="#0E0D14" x="24" y="90">stop/call limits</text>
+<rect fill="#7CE0C6" height="14" opacity=".8" rx="2" width="90" x="110" y="80"></rect><text fill="#0E0D14" x="114" y="90">case battery</text>
+<rect height="14" rx="2" stroke="#F2B45C" stroke-width="1.2" width="180" x="20" y="108"></rect><text fill="#F2B45C" x="24" y="118">data kept out: medical records, reason for visit, test results, CPF</text>
+<rect height="14" rx="2" stroke="#F2B45C" stroke-width="1.2" width="180" x="20" y="128"></rect><text fill="#F2B45C" x="24" y="138">confidentiality and LGPD restrictions</text>
+<rect height="14" rx="2" stroke="#F2B45C" stroke-width="1.2" width="180" x="20" y="148"></rect><text fill="#F2B45C" x="24" y="158">resource: with approval · approve: no</text>
+</g>
+<text fill="#6C6580" font-family="monospace" font-size="7" x="20" y="180">green = exchange · amber = only after 1 clean month</text>
+</svg></div>
+<div class="fig" data-cap="&lt;b&gt;Fig.&lt;/b&gt; ao marcar 'área: saúde', o kit liga três verificações a mais: dado de saúde na lista de fora, palavra clínica em ação ou objetivo, e menção a LGPD/consentimento/sigilo. Cada uma acende uma lacuna (âmbar) abaixo da especificação antes de você entregar." data-fig="2"><svg aria-hidden="true" fill="none" viewbox="0 0 220 200">
+<rect height="22" rx="4" stroke="#7CE0C6" stroke-width="1.5" width="120" x="14" y="16"></rect><text fill="#7CE0C6" font-family="monospace" font-size="7.5" x="20" y="31">area: health</text>
+<path d="M74 38 v14 M30 52 h88 M30 52 v10 M74 52 v10 M118 52 v10" stroke="#948DA6" stroke-width="1.2"></path>
+<g fill="#ECE6D9" font-family="monospace" font-size="6.5">
+<rect height="34" rx="3" stroke="#948DA6" stroke-width="1" width="60" x="8" y="62"></rect><text x="12" y="76">data about</text><text x="12" y="86">health outside?</text>
+<rect height="34" rx="3" stroke="#948DA6" stroke-width="1" width="60" x="74" y="62"></rect><text x="78" y="76">word</text><text x="78" y="86">clinic?</text>
+<rect height="34" rx="3" stroke="#948DA6" stroke-width="1" width="66" x="140" y="62"></rect><text x="144" y="76">LGPD/confidentiality</text><text x="144" y="86">written?</text>
+</g>
+<path d="M38 96 v14 M104 96 v14 M173 96 v14" stroke="#F2B45C" stroke-width="1.2"></path>
+<rect fill="#221f2e" height="60" rx="6" stroke="#37324a" stroke-width="1" width="192" x="14" y="110"></rect>
+<text fill="#948DA6" font-family="monospace" font-size="7" x="20" y="124">gaps</text>
+<rect fill="#F2B45C" height="10" opacity=".7" rx="2" width="180" x="20" y="130"></rect><rect fill="#F2B45C" height="10" opacity=".7" rx="2" width="180" x="20" y="144"></rect><rect fill="#F2B45C" height="8" opacity=".7" rx="2" width="180" x="20" y="158"></rect>
+<text fill="#6C6580" font-family="monospace" font-size="7" x="20" y="188">before handing it over, not afterward</text>
+</svg></div>
+<div class="fig" data-cap="&lt;b&gt;Fig.&lt;/b&gt; a ordem de adaptação, do bloco 1 ao 7 e depois a lista de lacunas. Os blocos 6 e 7 têm a marca âmbar: é onde mora o que não se afrouxa na primeira versão." data-fig="3"><svg aria-hidden="true" fill="none" viewbox="0 0 220 200">
+<g fill="#ECE6D9" font-family="monospace" font-size="7">
+<rect height="18" rx="3" stroke="#7CE0C6" stroke-width="1.2" width="192" x="14" y="14"></rect><text x="20" y="26">1 · clinic and outcome</text>
+<rect height="18" rx="3" stroke="#7CE0C6" stroke-width="1.2" width="192" x="14" y="38"></rect><text x="20" y="50">2·3 · limits, insurance agreements, standard message</text>
+<rect height="18" rx="3" stroke="#7CE0C6" stroke-width="1.2" width="192" x="14" y="62"></rect><text x="20" y="74">4·5 · systems and inventory with owners</text>
+<rect height="18" rx="3" stroke="#F2B45C" stroke-width="1.2" width="192" x="14" y="86"></rect><text x="20" y="98">6 · stop, call, test run without names</text>
+<rect height="18" rx="3" stroke="#F2B45C" stroke-width="1.2" width="192" x="14" y="110"></rect><text x="20" y="122">7 · names; don’t change approval/out-of-scope settings</text>
+</g>
+<path d="M110 128 v12" stroke="#948DA6" stroke-width="1.2"></path>
+<rect fill="#221f2e" height="22" rx="4" stroke="#7CE0C6" stroke-width="1.5" width="192" x="14" y="140"></rect><text fill="#7CE0C6" font-family="monospace" font-size="7.5" x="20" y="155">health gaps = 0 → rehearse</text>
+<text fill="#6C6580" font-family="monospace" font-size="7" x="14" y="186">20 min; the test run takes the longest</text>
+</svg></div>
+<div class="fig" data-cap="&lt;b&gt;Fig.&lt;/b&gt; o ciclo do ensaio numa clínica: especificação e caso fictício entram, o chat faz o coordenador, e as três lacunas típicas (como avisar a recepção, glosa fora da lista, dois cadastros) voltam em âmbar e viram linhas novas. Três casos passando, a página vai para o dono e para o sistema." data-fig="4"><svg aria-hidden="true" fill="none" viewbox="0 0 220 200">
+<rect fill="#221f2e" height="56" rx="6" stroke="#7CE0C6" stroke-width="1.5" width="62" x="12" y="66"></rect><text fill="#7CE0C6" font-family="monospace" font-size="7" x="18" y="90">spec.</text><text fill="#948DA6" font-family="monospace" font-size="6.5" x="18" y="104">+ fictitious case</text>
+<path d="M74 94 h30" stroke="#948DA6" stroke-width="1.5"></path>
+<rect height="76" rx="10" stroke="#37324a" stroke-width="1.5" width="104" x="104" y="56"></rect><rect fill="#221f2e" height="14" rx="10" width="104" x="104" y="56"></rect>
+<text fill="#ECE6D9" font-family="monospace" font-size="7" x="112" y="84">chat = coordinator</text>
+<g fill="#F2B45C" font-family="monospace" font-size="6">
+<rect height="9" rx="2" stroke="#F2B45C" stroke-width="1" width="92" x="110" y="92"></rect><text x="114" y="99">how to notify reception?</text>
+<rect height="9" rx="2" stroke="#F2B45C" stroke-width="1" width="92" x="110" y="104"></rect><text x="114" y="111">claim denial not on the list?</text>
+<rect height="9" rx="2" stroke="#F2B45C" stroke-width="1" width="92" x="110" y="116"></rect><text x="114" y="123">two records?</text>
+</g>
+<path d="M156 132 v20 h-114 v-30" fill="none" stroke="#F2B45C" stroke-width="1.5"></path><path d="M39 126 l3 -4 3 4" fill="none" stroke="#F2B45C" stroke-width="1.5"></path>
+<text fill="#F2B45C" font-family="monospace" font-size="7" x="50" y="168">gap → new row → run again</text>
+<text fill="#948DA6" font-family="monospace" font-size="8" x="12" y="30">3 cases: common · difficult · exception</text>
+<text fill="#6C6580" font-family="monospace" font-size="7" x="12" y="192">3 pass → clinic owner + system</text>
+</svg></div>
+</div>
+<p class="railcap"></p>
+<div class="steps-ind"></div>
+<p class="sidenote">Highlight any passage to turn it into a review card.</p>
+</div></aside>
+</div>
+<div class="fecho-wrap">
+<div class="recap-autor">
+<p class="rak">Summary</p>
+<ul>
+<li>The healthcare preset includes Renata’s clinic across the seven blocks, with the workbook’s rules built in. You can change insurance plans, hours, standard text, owners, limits, and the test cases; don’t change out-of-scope data, confidentiality, or “approve: not allowed” without a month of clean logs.</li>
+<li>Marking “area: healthcare” turns on three additional checks in the kit, which flag gaps before you hand over the page.</li>
+<li>The adaptation follows blocks 1 through 7, and the most time-consuming part is the set of cases, always without patient names.</li>
+<li>A clinic rehearsal often reveals how to notify reception, what to do with a claim denial that isn’t on the list, and how to handle a patient with two records. Each answer becomes a new line.</li>
+</ul>
+</div>
+<div class="next-action">
+<p class="nak">Your next step</p>
+<p class="na-win">You’ve just specified and rehearsed your clinic’s agent, with the medical record kept out of reach and an owner assigned to each permission.</p>
+<p class="na-action">In the next 15 minutes, send the .md to the clinic owner with one sentence: “This is what the agent does, this is what it never sees, this is what it can’t do, and this is who’s responsible for each line.” Ask them to spend eight minutes reading it and ask one question.</p>
+<p class="na-hook">The second of the ten processes (waitlist, treatment plans, billing) starts with lesson 1 of this workbook, using the same kit and the same matrix. It will take half the time.</p>
+</div>
+</div>
+<nav class="lnav"><a href="#aula-2">← lesson 2</a><a href="#trilha">complete the workbook →</a></nav>
+<footer>Lesson 3 · Agents in the Clinic · INEMA.CLUB PRO</footer>
+<!-- aula PRÁTICA/INTEGRAÇÃO: 3 cartões de aplicação integradores, decisão registrada -->
+<script id="cards-3" type="application/json">
+[
+  {"front":"Ao adaptar o preset, você escreveu no objetivo 'lembrar o paciente do tratamento pendente'. O kit acendeu uma lacuna. Qual, e como você reescreve?","back":"'Alguma ação ou objetivo parece clínico'. Tratamento pendente é do profissional. Reescrever como 'agendar a conversa com a dentista sobre o plano apresentado'."},
+  {"front":"No ensaio, o coordenador enviou a confirmação para uma paciente de 17 anos sem responsável cadastrado, sem perguntar. O que faltou na especificação e em que bloco entra?","back":"A regra 'menor sem responsável cadastrado: não enviar, separar para a recepção ligar'. Entra no bloco 2 (exceções) e no bloco 6 (parar). 'Menor só pelo responsável' não cobria o caso sem responsável."},
+  {"front":"O dono da clínica pergunta 'por que o agente não pode responder quando o paciente pergunta se precisa de jejum?'. Que linha da especificação você aponta, e o que ele ganha com ela?","back":"A restrição de sigilo e escopo: o agente só trata de nome, data, horário e profissional; qualquer pergunta que não é de agenda vai para a recepção. Ele ganha a garantia de que nenhuma orientação clínica sai de um agente, e a pergunta é respondida por quem pode."}
+]
+</script>
+<!-- COMPLETUDE aula-3 | tipo=PRATICA | steps=4
+  [OK] promise            .promise no cold-open (1)
+  [OK] why                .why após a promessa (1)
+  [OK] tempo              data-tempo="24min" no view + render no cold-open (1)
+  [OK] exemplo-profissao  exemplo aplicado em 100% dos steps (4/4: Renata+Patrícia, Patrícia, Renata, Renata)
+  [OK] apoio-visual       figura conceitual legendada em 100% dos steps (4/4, data-fig 1..4)
+  [OK] practice           .practice[data-mode="prompt"] (exatamente 1)
+  [OK] psafe              .psafe dentro da prática (1)
+  [OK] pgoal-tempo        .pgoal com tempo declarado (~15 min) (1)
+  [OK] recap-autor        .recap-autor no fecho (1)
+  [OK] next-action        .next-action no fecho (1)
+  [OK] cards              <script id="cards-3"> presente (3 cartões de aplicação integradores)
+  [OK] anti-duplicacao    §11.3 — 3 testes passam (substring / forma / operação)
+  [N/A] teste-se-FUND     aula é PRÁTICA/INTEGRAÇÃO (obrigação não se aplica); sem teste-se opcional
+  dosagem: qsteps (step 03) + mini-caso integrador (prosa: Renata adaptando o preset e o ensaio, steps 01–04) obrigatórios + qapply opcional (step 01, 3 perfis) = 3 (teto 5). densidade: 2 quadros em 4 steps, não adjacentes. data-versao no step 02. rampa de acesso antes da tela do kit ("ficha de admissão").
+-->
+</section>
+<script src="../assets/curso.js"></script>
+</body>
+</html>
